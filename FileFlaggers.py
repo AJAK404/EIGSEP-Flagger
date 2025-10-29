@@ -41,14 +41,38 @@ def isfilenormal(fname, lowo = -5, higho = 0,lows = -5, highs = 0, highl = -30,
       good = False
     if highn < loud:
       good = False
-    weird.update({"ante": bool(higha > ante)})
+    weird.update({"ant": bool(higha > ante)})
     weird.update({"load": bool(highal > load)})
     weird.update({"noise": bool(highn > loud)})
   return good, weird
 
 def isfoldernormal(s11folder, lowo = -5, higho = 0,lows = -5, highs = 0,
                    highl = -30, highd = -5, highr = -5, higha = -5, highal = -30,
-                   highn = -30, complain = True, displayAno = False, displayAll = False): # Do later.
+                   highn = -30): 
+  # -- Documentation--
+  # Required Inputs: A folder containing only s11 files; if you have other stuff in there, should remove it first.
+  # Optional Inputs: The upper and lower bounds of each input.
+  # Outputs: A boolean value denoting normality; if true, the entire folder is normal.
+  #          A dictionary of anomalies, structured as such:
+  #          {"path + filename": {"datacategory": bool}}
+  fdic = {}
+  for path, folders, files in os.walk(s11folder):
+    for fname in files:
+      fpath = path + "/" + fname
+      discard, keep = isfilenormal(fpath, lowo, higho, lows, highs, highl, highd, highr, higha, highal, highn)
+      fdic.update({fpath: keep})
+  return fdic
+
+def dataanomalies(tingy): # Notes files in which the calibration is normal but the data is not. Takes results of isfoldernormal.
+  l = []
+  for d in tingy:
+    if len(tingy[d]) == 2:
+      b = tingy[d]["rec"]
+    else:
+      b = tingy[d]["ant"] and tingy[d]["load"] and tingy[d]["noise"]
+    if b != tingy[d]["cal"]:
+      l.append(d)
+  return l
 
 def isfoldernormalfordisplay(s11folder, lowo = -5, higho = 0,lows = -5, highs = 0,
                    highl = -30, highd = -5, highr = -5, higha = -5, highal = -30,
