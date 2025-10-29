@@ -48,6 +48,10 @@ def isfilenormal(fname, lowo = -5, higho = 0,lows = -5, highs = 0, highl = -30,
 
 def isfoldernormal(s11folder, lowo = -5, higho = 0,lows = -5, highs = 0,
                    highl = -30, highd = -5, highr = -5, higha = -5, highal = -30,
+                   highn = -30, complain = True, displayAno = False, displayAll = False): # Do later.
+
+def isfoldernormalfordisplay(s11folder, lowo = -5, higho = 0,lows = -5, highs = 0,
+                   highl = -30, highd = -5, highr = -5, higha = -5, highal = -30,
                    highn = -30, complain = True, displayAno = False, displayAll = False):
   # -- Documentation--
   # Required Inputs: A folder containing only s11 files; if you have other stuff in there, should remove it first.
