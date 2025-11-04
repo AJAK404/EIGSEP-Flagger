@@ -13,9 +13,9 @@ def isfilenormal(fname, lowo = -5, higho = 0,lows = -5, highs = 0, highl = -30,
   weird = {}
   good = True
   data, cal, head, meta = eo.io.read_s11_file(fname)
-  vnao = np.mean(20 * np.log10(np.abs(cal["VNAO"])))
-  vnas = np.mean(20* np.log10(np.abs(cal["VNAS"])))
-  vnal = np.mean(20* np.log10(np.abs(cal["VNAL"])))
+  vnao = acf.mlin(cal["VNAO"])
+  vnas = acf.mlin(cal["VNAS"])
+  vnal = asf.mlin(cal["VNAL"])
   if lowo > vnao:
     good = False
   elif higho < vnao:
@@ -28,14 +28,14 @@ def isfilenormal(fname, lowo = -5, higho = 0,lows = -5, highs = 0, highl = -30,
     good = False
   weird.update({"cal": good})
   if len(data) == 1:
-    rec = np.mean(20* np.log10(np.abs(data["rec"])))
+    rec = asf.mlin(data["rec"])
     if highr < rec:
       good = False
     weird.update({"rec": bool(highr > rec)})
   else:
-    ante = np.mean(20* np.log10(np.abs(data["ant"])))
-    load = np.mean(20* np.log10(np.abs(data["load"])))
-    loud = np.mean(20* np.log10(np.abs(data["noise"])))
+    ante = asf.mlin(data["ant"])
+    load = asf.mlin(data["load"])
+    loud = asf.mlin(data["noise"])
     if higha < ante:
       good = False
     if highal < load:
@@ -100,9 +100,9 @@ def isfoldernormalfordisplay(s11folder, lowo = -5, higho = 0,lows = -5, highs = 
       good = True
       data, cal, head, meta = eo.io.read_s11_file(path + "/" + fname)
       # First, check the calibration.
-      vnao = np.mean(20 * np.log10(np.abs(cal["VNAO"])))
-      vnas = np.mean(20* np.log10(np.abs(cal["VNAS"])))
-      vnal = np.mean(20* np.log10(np.abs(cal["VNAL"])))
+      vnao = asf.mlin(cal["VNAO"])
+      vnas = asf.mlin(cal["VNAS"])
+      vnal = asf.mlin(cal["VNAL"])
       if lowo > vnao:
         whining.append("Mean VNAO " + str(vnao) + " is below " + str(lowo) + ".")
         yapping.append("VNAO")
@@ -125,15 +125,15 @@ def isfoldernormalfordisplay(s11folder, lowo = -5, higho = 0,lows = -5, highs = 
         good = False
       # Second, check the data.
       if len(data) == 1:
-        rec = np.mean(20* np.log10(np.abs(data["rec"])))
+        rec = asf.mlin(data["rec"])
         if highr < rec:
           whining.append("Mean data " + str(rec) + " is above " + str(highr) + ".")
           yapping.append("rec")
           good = False
       else:
-        ante = np.mean(20* np.log10(np.abs(data["ant"])))
-        load = np.mean(20* np.log10(np.abs(data["load"])))
-        loud = np.mean(20* np.log10(np.abs(data["noise"])))
+        ante = asf.mlin(data["ant"])
+        load = asf.mlin(data["load"])
+        loud = asf.mlin(data["noise"])
         if higha < ante:
           whining.append("Mean antenna data " + str(ante) + " is above " + str(higha) + ".")
           yapping.append("ant")
