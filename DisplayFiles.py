@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 import zipfile
 import os
+import ActiveFlagger as acf
 
 def listanomalies(anomalies): # Takes complaints and lists them.
   if anomalies == {}:
@@ -25,18 +26,18 @@ def displayAnomalies(anomalies, justAnomalies = False): # Takes anomalies and gr
     if justAnomalies: # If only the anomalies are wanted, just pull from the complaints.
       for yap in anomalies[fiel][1]:
         if yap[:3] == "VNA":
-          plt.plot(lin(cal[yap]), color = colors[yap],label = yap)
+          plt.plot(acf.lin(cal[yap]), color = colors[yap],label = yap)
         else:
-          plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+          plt.plot(acf.lin(data[yap]), color = colors[yap],label = yap)
     else: # Otherwise, display all of the lines.
       for yap in colors:
         if yap[:3] == "VNA":
-          plt.plot(lin(cal[yap]), color = colors[yap],label = yap)
+          plt.plot(acf.lin(cal[yap]), color = colors[yap],label = yap)
         else:
           if len(data) == 1 and yap == "rec":
-            plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+            plt.plot(acf.lin(data[yap]), color = colors[yap],label = yap)
           elif len(data) == 3 and yap != "rec":
-            plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+            plt.plot(acf.lin(data[yap]), color = colors[yap],label = yap)
     titl = fiel
     if justAnomalies:
       titl = fiel + " Anomalies"
@@ -59,12 +60,12 @@ def displayNormal(s11folder, anomalies): # Takes normal data and graphs it.
         plt.figure()
         for yap in colors:
           if yap[:3] == "VNA":
-            plt.plot(lin(cal[yap]), color = colors[yap],label = yap)
+            plt.plot(acf.lin(cal[yap]), color = colors[yap],label = yap)
           else:
             if len(data) == 1 and yap == "rec":
-              plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+              plt.plot(acf.lin(data[yap]), color = colors[yap],label = yap)
             elif len(data) == 3 and yap != "rec":
-              plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+              plt.plot(acf.lin(data[yap]), color = colors[yap],label = yap)
         titl = fpath
         plt.title(titl)
         plt.legend()
@@ -81,12 +82,12 @@ def displayAll(s11folder): # Displays all the graphs.
         plt.figure()
         for yap in colors:
           if yap[:3] == "VNA":
-            plt.plot(lin(cal[yap]), color = colors[yap],label = yap)
+            plt.plot(acf.lin(cal[yap]), color = colors[yap],label = yap)
           else:
             if len(data) == 1 and yap == "rec":
-              plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+              plt.plot(acf.lin(data[yap]), color = colors[yap],label = yap)
             elif len(data) == 3 and yap != "rec":
-              plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+              plt.plot(acf.lin(data[yap]), color = colors[yap],label = yap)
         titl = fpath
         plt.title(titl)
         plt.legend()
@@ -107,12 +108,12 @@ def shows11(fpath):
             "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
   for yap in colors:
     if yap[:3] == "VNA":
-      plt.plot(lin(cal[yap]), color = colors[yap],label = yap)
+      plt.plot(acf.lin(cal[yap]), color = colors[yap],label = yap)
     else:
       if len(data) == 1 and yap == "rec":
-        plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+        plt.plot(acf.lin(data[yap]), color = colors[yap],label = yap)
       elif len(data) == 3 and yap != "rec":
-        plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+        plt.plot(acf.lin(data[yap]), color = colors[yap],label = yap)
   titl = fpath
   plt.title(titl)
   plt.legend()
