@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 import zipfile
 import os
-from eigsep_data.utils import lin2dB, mlin
+from .utils import lin2dB, mlin
 
 def isfilenormal(fname, lowo = -5, higho = 0,lows = -5, highs = 0, highl = -30,
                  highd = -5, highr = -5, higha = -5, highal = -30, highn = -30):
