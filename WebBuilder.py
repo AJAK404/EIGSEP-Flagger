@@ -1,5 +1,4 @@
-import webbrowser
-import pyplot as plt
+import matplotlib.pyplot as plt
 import numpy
 
 def buildpage(meta, fname="", image="", normal = {}):
