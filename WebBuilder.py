@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy
+from ActiveFlagger.py import activeflag()
 
 def buildpage(meta, fname="", image="", normal = {}):
   mia = meta["imu_antenna"]
