@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import os
 import sys
 import eigsep_observing as eo
+from ActiveFlagger import activeflag
 
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
 
