@@ -10,6 +10,9 @@ from ActiveFlagger import activeflag
 
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
 
+def lin(x):
+  return 20* np.log10(np.abs(x))
+
 def seefile(data, cal):
   plt.figure()
   colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
