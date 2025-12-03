@@ -4,6 +4,7 @@ import base64
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import sys
 
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
 
@@ -218,7 +219,7 @@ def buildpage(meta, data, cal, spec = {}, fname=""):
   with open(fiel, "w") as f:
     f.write(html)
 
-def foldersite(s11folder, path="/content"): ## Will evolve.
+def foldersite(s11folder, path="."): ## Will evolve.
   opened = False
   for path, folders, files in os.walk(s11folder):
     for fname in files:
@@ -228,4 +229,4 @@ def foldersite(s11folder, path="/content"): ## Will evolve.
       if not opened:
         webbrowser.open(path + "/thisone4986349238648392.html")
         opened = True
-foldersite("/content/july2025_S11")
+foldersite("./july2025_S11")
