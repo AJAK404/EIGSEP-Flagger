@@ -1,6 +1,9 @@
 import numpy as np
 from eigsep_data.utils import lin2dB, mlin
 
+def lin(x):
+  return 20* np.log10(np.abs(x))
+
 def activeflag(data, cal, lowo = -5, higho = 0,lows = -5, highs = 0, highl = -30,
                highd = -5, highr = -5, higha = -5, highal = -30, highn = -30):
   # Checks normalacy as data is recorded after required amount of data; is either whole or scrolling.
