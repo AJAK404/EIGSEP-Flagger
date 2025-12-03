@@ -225,3 +225,4 @@ def foldersite(s11folder, path="/content"): ## Will evolve.
       if not opened:
         webbrowser.open(path + "/thisone4986349238648392.html")
         opened = True
+foldersite("/content/july2025_S11")
