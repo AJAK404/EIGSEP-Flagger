@@ -96,7 +96,7 @@ def ripper(fname):
       return fn
   return fn
 
-def buildpage(meta, data, cal, spec = {}, fname=""):
+def buildpage(meta, data, cal, spec = {}, fname="", active=False):
   normal = activeflag(data,cal)
   mia = meta["imu_antenna"]
   mip = meta["imu_panda"]
@@ -107,9 +107,11 @@ def buildpage(meta, data, cal, spec = {}, fname=""):
   rfs = meta["rfswitch"]
   global tdata
   global s11data
-  tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
+  if active:
+    grabbit()
+  else:
+    tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                             [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
-  #grabbit()
   tgraph = """
       <img src="data:image/png;base64,""" + seetemp() + """" width="400" height="300">
       """
@@ -130,6 +132,14 @@ def buildpage(meta, data, cal, spec = {}, fname=""):
     else:
       dlist = """Antenna: """ + str(normal["ant"]) + """, Load: """ + str(normal["load"]) + """, Noise: """ + str(normal["noise"]) + """</p>
       """
+  if active:
+    imtab = """
+    <div class="boxes" id="s11">
+      <img src="data:image/png;base64,""" + seeactives11() + """" width="400" height="300">
+      <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
+    </div>
+      """
+  else:
     imtab = """
     <div class="boxes" id="s11">
       <img src="data:image/png;base64,""" + seefile(data, cal) + """" width="400" height="300">
