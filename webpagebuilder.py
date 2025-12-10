@@ -7,7 +7,7 @@ import os
 import sys
 import eigsep_observing as eo
 from ActiveFlagger import activeflag
-from eo import EigsepRedis
+from eigsep_observing import EigsepRedis
 
 r = EigsepRedis(host="10.10.10.11")
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
