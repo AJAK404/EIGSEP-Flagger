@@ -123,13 +123,13 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
   terror = """"""
   if not active:
     for boo in ["A_status", "B_status"]:
-    if tem[boo] == "error":
-      terror += """
-      <p>Error in monitoring """ + boo + """</p>
+      if tem[boo] == "error":
+        terror += """
+        <p>Error in monitoring """ + boo + """</p>
            """
-    if tec[boo] == "error":
-      terror += """
-      <p>Error in control """ + boo + """</p>
+      if tec[boo] == "error":
+        terror += """
+        <p>Error in control """ + boo + """</p>
             """
   if not active:
     if len(normal) == 2:
