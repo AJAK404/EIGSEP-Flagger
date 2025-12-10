@@ -7,7 +7,9 @@ import os
 import sys
 import eigsep_observing as eo
 from ActiveFlagger import activeflag
+from eo import EigsepRedis
 
+r = EigsepRedis(host="10.10.10.11")
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
 s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.array([[0],[0]]),
            "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
@@ -96,7 +98,7 @@ def ripper(fname):
       return fn
   return fn
 
-def buildpage(meta, data, cal, spec = {}, fname="", active=False):
+def buildpage(meta, data, cal, spec = {}, fname="", active=False, r=None):
   normal = activeflag(data,cal)
   mia = meta["imu_antenna"]
   mip = meta["imu_panda"]
@@ -105,10 +107,8 @@ def buildpage(meta, data, cal, spec = {}, fname="", active=False):
   lid = meta["lidar"]
   mot = meta["motor"]
   rfs = meta["rfswitch"]
-  global tdata
-  global s11data
   if active:
-    grabbit()
+    grabbit(r)
   else:
     tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                             [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
