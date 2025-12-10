@@ -14,6 +14,7 @@ tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
 s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.array([[0],[0]]),
            "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
            "rec": np.array([[0],[0]])}
+opene = False
 
 def lin(x):
   return 20* np.log10(np.abs(x))
@@ -101,6 +102,7 @@ def ripper(fname):
   return fn
 
 def buildpage(meta, data, cal, spec = {}, fname="", active=False):
+  global opene
   normal = activeflag(data,cal)
   mia = meta["imu_antenna"]
   mip = meta["imu_panda"]
@@ -304,6 +306,9 @@ def buildpage(meta, data, cal, spec = {}, fname="", active=False):
     fiel = ripper(fname) + ".html"
   with open(fiel, "w") as f:
     f.write(html)
+    if not opene:
+      webbrowser.open(path + "/thisone4986349238648392.html")
+      opene = True
 
 def foldersite(s11folder, path="."): ## Will evolve.
   opened = False
