@@ -101,7 +101,7 @@ def ripper(fname):
       return fn
   return fn
 
-def buildpage(meta, data, cal, spec = {}, fname="", active=False):
+def buildpage(meta, data, cal, spec = {}, fname="", active=False, path="."):
   global opene
   normal = activeflag(data,cal)
   mia = meta["imu_antenna"]
