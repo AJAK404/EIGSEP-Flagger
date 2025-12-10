@@ -9,6 +9,7 @@ import eigsep_observing as eo
 from ActiveFlagger import activeflag
 from eigsep_observing import EigsepRedis
 import time
+import webbrowser
 
 r = EigsepRedis(host="10.10.10.11")
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
@@ -50,7 +51,7 @@ def seeactives11():
   for yap in colors:
     if len(s11data[yap]) > 1:
       plt.scatter(s11data[yap][0][1:], s11data[yap][1][1:], color = colors[yap], label = yap)
-  plt.legend()
+  plt.legend(loc="lower right")
   buffer = io.BytesIO()
   plt.savefig(buffer, format='png')
   buffer.seek(0)
@@ -66,6 +67,7 @@ def grabbit():
   tec = meta["tempctrl"]
   tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                     [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
+  return meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]
   
 def seetemp():
   global tdata
@@ -82,7 +84,7 @@ def seetemp():
   plt.scatter(atc[0][1:], atc[1][1:], color = "green",label = "A_Temp_Ctrl")
   plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
   plt.title("Temperature")
-  plt.legend()
+  plt.legend(loc="lower right")
   buffer = io.BytesIO()
   plt.savefig(buffer, format='png')
   buffer.seek(0)
@@ -114,7 +116,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     mot = meta["motor"]
     rfs = meta["rfswitch"]
   if active:
-    grabbit()
+    mia, mip, tem, tec, lid, mot, rfs = grabbit()
   else:
     tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                             [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
@@ -122,7 +124,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       <img src="data:image/png;base64,""" + seetemp() + """" width="400" height="300">
       """
   terror = """"""
-  if not active:
+  if True:
     for boo in ["A_status", "B_status"]:
       if tem[boo] == "error":
         terror += """
@@ -279,6 +281,23 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     </div>
     </div>
     <div class="notebook">
+    <div class="boxes" id="tool">
+      <h4 style="text-align: center">Motor</h4>
+      <div class="mon">
+        <li style="text-align:center"><b>AZ</b></li>
+        <li>Position: """ + str(mot["az_pos"]) + """</li>
+        <li>Direction: """ + str(mot["az_dir"]) + """</li>
+        <li>Remaining Steps: """ + str(mot["az_remaining_steps"]) + """</li>
+        <li>Maximum Pulses: """ + str(mot["az_max_pulses"]) + """</li>
+        <li style="text-align:center"><b>EL</b></li>
+        <li>Position: """ + str(mot["el_pos"]) + """</li>
+        <li>Direction: """ + str(mot["el_dir"]) + """</li>
+        <li>Remaining Steps: """ + str(mot["el_remaining_steps"]) + """</li>
+        <li>Maximum Pulses: """ + str(mot["el_max_pulses"]) + """</li>
+      </div>
+      <p>Lidar Distance: """ + str(lid["distance_m"]) + """ meters</p>
+      <p>Switch State: """ + str(bin(rfs["sw_state"]))[::-1] + """</p>
+    </div>
     </div>
 </body>
 </html>"""
