@@ -103,7 +103,8 @@ def ripper(fname):
 
 def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path="."):
   global opene
-  normal = activeflag(data,cal)
+  if not active:
+    normal = activeflag(data,cal)
   mia = meta["imu_antenna"]
   mip = meta["imu_panda"]
   tem = meta["temp_mon"]
@@ -129,7 +130,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       terror += """
       <p>Error in control """ + boo + """</p>
       """
-  if True:
+  if not active:
     if len(normal) == 2:
       dlist = """Recording: """ + str(normal["rec"]) + """</p>
       """
@@ -140,8 +141,6 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     imtab = """
     <div class="boxes" id="s11">
       <img src="data:image/png;base64,""" + seeactives11() + """" width="400" height="300">
-      <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
-    </div>
       """
   else:
     imtab = """
