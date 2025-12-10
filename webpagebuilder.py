@@ -302,4 +302,4 @@ def foldersite(s11folder, path="."): ## Will evolve.
       if not opened:
         webbrowser.open(path + "/thisone4986349238648392.html")
         opened = True
-buildpage(active=True)
+buildpage(meta=r.get_live_metadata(host="10.10.10.11"), active=True)
