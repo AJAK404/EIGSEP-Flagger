@@ -121,15 +121,16 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       <img src="data:image/png;base64,""" + seetemp() + """" width="400" height="300">
       """
   terror = """"""
-  for boo in ["A_status", "B_status"]:
+  if not active:
+    for boo in ["A_status", "B_status"]:
     if tem[boo] == "error":
       terror += """
       <p>Error in monitoring """ + boo + """</p>
-      """
+           """
     if tec[boo] == "error":
       terror += """
       <p>Error in control """ + boo + """</p>
-      """
+            """
   if not active:
     if len(normal) == 2:
       dlist = """Recording: """ + str(normal["rec"]) + """</p>
@@ -302,4 +303,4 @@ def foldersite(s11folder, path="."): ## Will evolve.
       if not opened:
         webbrowser.open(path + "/thisone4986349238648392.html")
         opened = True
-buildpage(meta=r.get_live_metadata(host="10.10.10.11"), active=True)
+buildpage(active=True)
