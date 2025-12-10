@@ -56,12 +56,15 @@ def seeactives11():
   return img64
   
 def grabbit():
+  global tdata
   global s11data
-  return "I don't know how to get data directly from the creature???"
-  # Presumably adds data to the s11data global array as point [timestamp, data].
-  # Example: 
-  # if databeingcollected == "column": 
-  #   s11data["column"] = np.append(s11data["column"], np.array([[timestamp],[data]]), axis=1)
+  global r
+  meta = r.get_live_metadata()
+  dta = r.read_vna_data()
+  tem = meta["temp_mon"]
+  tec = meta["tempctrl"]
+  tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
+                    [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
   
 def seetemp():
   global tdata
