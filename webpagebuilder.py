@@ -304,10 +304,11 @@ def foldersite(s11folder, path="."): ## Will evolve.
       if not opened:
         webbrowser.open(path + "/thisone4986349238648392.html")
         opened = True
-try:
-  while True:
+                 
+while True:
+  try:
     buildpage(active=True)
     time.sleep(2)
-except KeyboardInterrupt:
-  print("Goodbye!!!!!!")
-  break
+  except KeyboardInterrupt:
+    print("Goodbye!!!!!!")
+    break
