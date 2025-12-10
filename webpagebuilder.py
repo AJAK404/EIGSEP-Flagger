@@ -98,7 +98,7 @@ def ripper(fname):
       return fn
   return fn
 
-def buildpage(meta, data, cal, spec = {}, fname="", active=False, r=None):
+def buildpage(meta, data, cal, spec = {}, fname="", active=False):
   normal = activeflag(data,cal)
   mia = meta["imu_antenna"]
   mip = meta["imu_panda"]
@@ -108,7 +108,7 @@ def buildpage(meta, data, cal, spec = {}, fname="", active=False, r=None):
   mot = meta["motor"]
   rfs = meta["rfswitch"]
   if active:
-    grabbit(r)
+    grabbit()
   else:
     tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                             [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
