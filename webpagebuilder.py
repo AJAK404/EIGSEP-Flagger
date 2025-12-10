@@ -105,13 +105,13 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
   global opene
   if not active:
     normal = activeflag(data,cal)
-  mia = meta["imu_antenna"]
-  mip = meta["imu_panda"]
-  tem = meta["temp_mon"]
-  tec = meta["tempctrl"]
-  lid = meta["lidar"]
-  mot = meta["motor"]
-  rfs = meta["rfswitch"]
+    mia = meta["imu_antenna"]
+    mip = meta["imu_panda"]
+    tem = meta["temp_mon"]
+    tec = meta["tempctrl"]
+    lid = meta["lidar"]
+    mot = meta["motor"]
+    rfs = meta["rfswitch"]
   if active:
     grabbit()
   else:
