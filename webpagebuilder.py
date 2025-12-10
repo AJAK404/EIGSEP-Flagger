@@ -10,6 +10,7 @@ from ActiveFlagger import activeflag
 from eigsep_observing import EigsepRedis
 import time
 import webbrowser
+import subprocess
 
 r = EigsepRedis(host="10.10.10.11")
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
