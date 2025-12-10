@@ -310,7 +310,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
   with open(fiel, "w") as f:
     f.write(html)
     if not opene:
-      webbrowser.open(path + "/thisone4986349238648392.html")
+      subprocess.call(["open", path + "/thisone4986349238648392.html"])
       opene = True
 
 def foldersite(s11folder, path="."): ## Will evolve.
