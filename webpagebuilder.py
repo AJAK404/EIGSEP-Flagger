@@ -145,12 +145,48 @@ def buildpage(meta, data, cal, spec = {}, fname=""):
         }
     </style>
     <script>
+      window.onload = function() {
+        function getsaved() {
+          var stheme = localStorage.getItem("theme");
+          var body = document.getElementById("body");
+          var boxes = document.getElementsByClassName("boxes");
+          if (stheme === "dark") {
+              body.style.backgroundColor = "#282828";
+              body.style.color = "lightgray";
+              body.style.fontFamily = "monospace";
+            for (var i = 0; i < boxes.length; i++) {
+              boxes[i].style.border = "2px solid yellow";
+              boxes[i].style.backgroundColor = "#383838";
+            }
+          } else if (stheme === "light") {
+            body.style.backgroundColor = "white";
+            body.style.color = "#282828";
+            body.style.fontFamily = "cursive";
+            for (var i = 0; i < boxes.length; i++) {
+              boxes[i].style.border = "2px solid blue";
+              boxes[i].style.backgroundColor = "WhiteSmoke";
+            }
+          }
+          for (var i = 0; i < boxes.length; i++) {
+            var thing = boxes[i].id
+            var btheme = localStorage.getItem(thing.concat("sh"));
+            if (btheme === "on") {
+              boxes[i].style.display = "block";
+            } else if (btheme === "off") {
+              boxes[i].style.display = "none";
+            }
+          }
+        }
+        getsaved();
+      }
       function showhide(thing) {
           var x = document.getElementById(thing);
           if (x.style.display === "none") {
               x.style.display = "block";
+              localStorage.setItem(thing.concat("sh"), "on");
           } else {
               x.style.display = "none";
+              localStorage.setItem(thing.concat("sh"), "off");
           }
       }
       function lightswitch() {
@@ -165,6 +201,7 @@ def buildpage(meta, data, cal, spec = {}, fname=""):
             boxes[i].style.border = "2px solid blue";
             boxes[i].style.backgroundColor = "WhiteSmoke";
           }
+          localStorage.setItem("theme", "light");
         } else {
           body.style.backgroundColor = "#282828";
           body.style.color = "lightgray";
@@ -173,6 +210,7 @@ def buildpage(meta, data, cal, spec = {}, fname=""):
             boxes[i].style.border = "2px solid yellow";
             boxes[i].style.backgroundColor = "#383838";
           }
+          localStorage.setItem("theme", "dark");
         }
       }
       setTimeout(() => location.reload(), 2000);
@@ -194,7 +232,8 @@ def buildpage(meta, data, cal, spec = {}, fname=""):
       """ + tgraph + """
       """ + terror + """
     </div>
-    <br>
+    </div>
+    <div class="notebook">
     <div class="boxes" id="tool">
       <h4 style="text-align: center">Motor</h4>
       <div class="mon">
