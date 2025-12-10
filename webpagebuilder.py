@@ -277,23 +277,6 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     </div>
     </div>
     <div class="notebook">
-    <div class="boxes" id="tool">
-      <h4 style="text-align: center">Motor</h4>
-      <div class="mon">
-        <li style="text-align:center"><b>AZ</b></li>
-        <li>Position: """ + str(mot["az_pos"]) + """</li>
-        <li>Direction: """ + str(mot["az_dir"]) + """</li>
-        <li>Remaining Steps: """ + str(mot["az_remaining_steps"]) + """</li>
-        <li>Maximum Pulses: """ + str(mot["az_max_pulses"]) + """</li>
-        <li style="text-align:center"><b>EL</b></li>
-        <li>Position: """ + str(mot["el_pos"]) + """</li>
-        <li>Direction: """ + str(mot["el_dir"]) + """</li>
-        <li>Remaining Steps: """ + str(mot["el_remaining_steps"]) + """</li>
-        <li>Maximum Pulses: """ + str(mot["el_max_pulses"]) + """</li>
-      </div>
-      <p>Lidar Distance: """ + str(lid["distance_m"]) + """ meters</p>
-      <p>Switch State: """ + str(bin(rfs["sw_state"]))[::-1] + """</p>
-    </div>
     </div>
 </body>
 </html>"""
