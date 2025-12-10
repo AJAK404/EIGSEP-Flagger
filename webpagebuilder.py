@@ -9,6 +9,9 @@ import eigsep_observing as eo
 from ActiveFlagger import activeflag
 
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
+s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.array([[0],[0]]),
+           "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
+           "rec": np.array([[0],[0]])}
 
 def lin(x):
   return 20* np.log10(np.abs(x))
@@ -33,8 +36,33 @@ def seefile(data, cal):
   buffer.seek(0)
   img64 = base64.b64encode(buffer.read()).decode('utf-8')
   return img64
-
+  
+def seeactives11():
+  plt.figure()
+  colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
+            "ant": "green", "load": "blue", "noise": "purple",
+            "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
+  plt.title("S11")
+  for yap in colors:
+    if len(s11data[yap]) > 1:
+      plt.scatter(s11data[yap][0][1:], s11data[yap][1][1:], color = colors[yap], label = yap)
+  plt.legend()
+  buffer = io.BytesIO()
+  plt.savefig(buffer, format='png')
+  buffer.seek(0)
+  img64 = base64.b64encode(buffer.read()).decode('utf-8')
+  return img64
+  
+def grabbit():
+  global s11data
+  return "I don't know how to get data directly from the creature???"
+  # Presumably adds data to the s11data global array as point [timestamp, data].
+  # Example: 
+  # if databeingcollected == "column": 
+  #   s11data["column"] = np.append(s11data["column"], np.array([[timestamp],[data]]), axis=1)
+  
 def seetemp():
+  global tdata
   plt.figure()
   colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
             "ant": "green", "load": "blue", "noise": "purple",
@@ -78,8 +106,10 @@ def buildpage(meta, data, cal, spec = {}, fname=""):
   mot = meta["motor"]
   rfs = meta["rfswitch"]
   global tdata
+  global s11data
   tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                             [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
+  #grabbit()
   tgraph = """
       <img src="data:image/png;base64,""" + seetemp() + """" width="400" height="300">
       """
