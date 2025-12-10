@@ -8,6 +8,7 @@ import sys
 import eigsep_observing as eo
 from ActiveFlagger import activeflag
 from eigsep_observing import EigsepRedis
+import time
 
 r = EigsepRedis(host="10.10.10.11")
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
@@ -303,4 +304,7 @@ def foldersite(s11folder, path="."): ## Will evolve.
       if not opened:
         webbrowser.open(path + "/thisone4986349238648392.html")
         opened = True
-buildpage(active=True)
+try:
+  while True:
+    buildpage(active=True)
+    time.sleep(2)
