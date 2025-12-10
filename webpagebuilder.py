@@ -60,7 +60,6 @@ def grabbit():
   global s11data
   global r
   meta = r.get_live_metadata()
-  dta = r.read_vna_data()
   tem = meta["temp_mon"]
   tec = meta["tempctrl"]
   tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
