@@ -101,7 +101,7 @@ def ripper(fname):
       return fn
   return fn
 
-def buildpage(meta, data, cal, spec = {}, fname="", active=False, path="."):
+def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path="."):
   global opene
   normal = activeflag(data,cal)
   mia = meta["imu_antenna"]
@@ -320,4 +320,4 @@ def foldersite(s11folder, path="."): ## Will evolve.
       if not opened:
         webbrowser.open(path + "/thisone4986349238648392.html")
         opened = True
-foldersite("./july2025_S11")
+buildpage(active=True)
