@@ -321,7 +321,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
   with open(fiel, "w") as f:
     f.write(html)
     if not opene:
-      subprocess.call(["open", "thisone4986349238648392.html"])
+      subprocess.call(["open", "thisone4986349238648392.html"], shell=True)
       opene = True
 
 def foldersite(s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
