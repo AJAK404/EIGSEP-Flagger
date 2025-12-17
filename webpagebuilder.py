@@ -315,16 +315,16 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
   fiel = ""
   if fname == "":
     fiel = "demo" + str(np.random.randint(1, 1000000)) + ".html"
-    fiel = "thisone4986349238648392.html"
+    fiel = "~/EIGSEP-Flagger/thisone4986349238648392.html"
   else:
     fiel = ripper(fname) + ".html"
   with open(fiel, "w") as f:
     f.write(html)
     if not opene:
-      subprocess.call(["open", path + "/thisone4986349238648392.html"])
+      subprocess.call(["open", "~/EIGSEP-Flagger/thisone4986349238648392.html"])
       opene = True
 
-def foldersite(s11folder, path="."): ## Will evolve.
+def foldersite(s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
   opened = False
   for path, folders, files in os.walk(s11folder):
     for fname in files:
@@ -337,7 +337,7 @@ def foldersite(s11folder, path="."): ## Will evolve.
                  
 while True:
   try:
-    buildpage(active=True)
+    buildpage(path = , active=True)
     time.sleep(2)
   except KeyboardInterrupt:
     print("Goodbye!!!!!!")
