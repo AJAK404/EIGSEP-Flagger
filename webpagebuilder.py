@@ -156,10 +156,11 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     else:
       dlist = """Antenna: """ + str(normal["ant"]) + """, Load: """ + str(normal["load"]) + """, Noise: """ + str(normal["noise"]) + """</p>
       """
-  if False:
+  if active:
     imtab = """
     <div class="boxes" id="s11">
       <img src="data:image/png;base64,""" + seeactives11() + """" width="400" height="300">
+      <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
     </div>
       """
   else:
