@@ -337,7 +337,7 @@ def foldersite(s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
                  
 while True:
   try:
-    buildpage(path = , active=True)
+    buildpage(active=True)
     time.sleep(2)
   except KeyboardInterrupt:
     print("Goodbye!!!!!!")
