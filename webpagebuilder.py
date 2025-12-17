@@ -315,7 +315,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
   fiel = ""
   if fname == "":
     fiel = "demo" + str(np.random.randint(1, 1000000)) + ".html"
-    fiel = "~/EIGSEP-Flagger/thisone4986349238648392.html"
+    fiel = "thisone4986349238648392.html"
   else:
     fiel = ripper(fname) + ".html"
   with open(fiel, "w") as f:
