@@ -96,6 +96,17 @@ def seetemp():
   img64 = base64.b64encode(buffer.read()).decode('utf-8')
   return img64
 
+def seespec(k)
+  global spec
+  plt.figure()
+  plt.plot(lin(spec[k]))
+  plt.title(k)
+  buffer = io.BytesIO()
+  plt.savefig(buffer, format='png')
+  buffer.seek(0)
+  img64 = base64.b64encode(buffer.read()).decode('utf-8')
+  return img64
+
 def ripper(fname):
   i= -4
   chara = fname[i]
@@ -331,6 +342,8 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
         }
         getsaved();
       }
+
+      """ + specfunc + """
       function showhide(thing) {
           var x = document.getElementById(thing);
           if (x.style.display === "none") {
@@ -373,6 +386,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
         <div class="buttons">
             <button onclick="showhide('s11')">S11</button>
             <button onclick="showhide('temps')">Temperature</button>
+            """ + sbutton + """
             <button onclick="showhide('tool')">Tools</button>
             <br>
             <button onclick="lightswitch()">Light Switch</button>
@@ -386,6 +400,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     </div>
     </div>
     <div class="notebook">
+    """ + stab + """
     <div class="boxes" id="tool">
       <h4 style="text-align: center">Motor</h4>
       <div class="mon">
