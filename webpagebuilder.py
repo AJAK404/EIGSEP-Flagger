@@ -19,6 +19,7 @@ s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.
            "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
            "rec": np.array([[0],[0]])}
 opene = False
+IMGGGG = "uhhhhhhhhhh"
 
 def lin(x):
   return 20* np.log10(np.abs(x))
@@ -98,7 +99,8 @@ def seetemp():
   return img64
 
 def seespec(k):
-  readspec = r.read_corr_data(timeout = 10)
+  global IMGGGG
+  readspec = r.read_corr_data(timeout = 3)
   spec = readspec[2]
   plt.figure()
   plt.plot(np.log10(np.abs(spec[k])))
@@ -107,6 +109,7 @@ def seespec(k):
   plt.savefig(buffer, format='png')
   buffer.seek(0)
   img64 = base64.b64encode(buffer.read()).decode('utf-8')
+  IMGGGG = img64
   plt.close()
   return img64
 
@@ -175,6 +178,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       dlist = """Antenna: """ + str(normal["ant"]) + """, Load: """ + str(normal["load"]) + """, Noise: """ + str(normal["noise"]) + """</p>
       """
   if active:
+    seespec("1")
     imtab = """
     <div class="boxes" id="s11">
       <img src="data:image/png;base64,""" + seeactives11() + """" width="400" height="300">
@@ -243,10 +247,10 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       }
       """
     specset = """
-          var sval = localStorage.getItem("spec");
+          var sval = "0";
           var image = document.getElementById("sspec");
           if (sval === "0") {
-              image.src = "data:image/png;base64,""" + seespec("0") + """";        
+              image.src = "data:image/png;base64,""" + IMGGGG + """";        
           } else if (sval === "02") {
               image.src = "data:image/png;base64,""" + seespec("02") + """"; 
           } else if (sval === "04") {
@@ -270,7 +274,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
           } else if (sval === "5") {
               image.src = "data:image/png;base64,""" + seespec("5") + """"; 
           } else {
-              image.src = "data:image/png;base64,""" + seespec("1") + """";
+              image.src = "data:image/png;base64,""" + IMGGGG + """";
           }
     """
     sbutton = """
