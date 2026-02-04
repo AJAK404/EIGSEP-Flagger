@@ -203,7 +203,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     specfunc = """
       var select = document.querySelector(".spselect");
       var ting = select.options[select.selectedIndex];
-      var lastSelected = localStorage.getItem('sval');
+      var lastSelected = localStorage.getItem('spec');
       if(lastSelected) {
         select.value = lastSelected; 
       }
@@ -211,7 +211,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
         var image = document.getElementById("sspec");
         lastSelected = select.options[select.selectedIndex].value;
         console.log(lastSelected);
-        localStorage.setItem('select', lastSelected);
+        localStorage.setItem('spec', lastSelected);
         var sval = lastSelected;
         if (sval === "0") {
           image.src = "data:image/png;base64,""" + seespec("0") + """";        
@@ -237,6 +237,8 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
           image.src = "data:image/png;base64,""" + seespec("4") + """"; 
         } else if (sval === "5") {
           image.src = "data:image/png;base64,""" + seespec("5") + """"; 
+        } else {
+          image.src = "data:image/png;base64,""" + seespec("1") + """";
         }
       }
       """
