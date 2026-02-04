@@ -441,7 +441,7 @@ def foldersite(s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
                  
 while True:
   try:
-    IMGGGG = seespec(1)
+    IMGGGG = seespec("1")
     buildpage(active=True)
     time.sleep(2)
   except KeyboardInterrupt:
