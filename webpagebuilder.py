@@ -100,7 +100,7 @@ def seespec(k)
   readspec = r.read_core_data(timeout = 2)
   spec = readspec[2]
   plt.figure()
-  plt.plot(lin(spec[k]))
+  plt.plot(np.log10(np.abs(spec[k])))
   plt.title(str(k) + " " + str(readspec[1]))
   buffer = io.BytesIO()
   plt.savefig(buffer, format='png')
