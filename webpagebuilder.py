@@ -201,11 +201,18 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     </div>
     """
     specfunc = """
-      function selectspec() {
-        var select = document.getElementById("spselect");
+      var select = document.getElementById("spselect");
+      var ting = select.options[select.selectedIndex];
+      var lastSelected = localStorage.getItem('sval');
+      if(lastSelected) {
+        select.value = lastSelected; 
+      }
+      select.onchange = function selectspec() {
         var image = document.getElementById("sspec");
-        var sval = select.value;
-        localStorage.setItem("spec", sval);
+        lastSelected = select.options[select.selectedIndex].value;
+        console.log(lastSelected);
+        localStorage.setItem('select', lastSelected);
+        var sval = lastSelected;
         if (sval === "0") {
           image.src = "data:image/png;base64,""" + seespec("0") + """";        
         } else if (sval === "02") {
