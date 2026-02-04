@@ -439,9 +439,9 @@ def foldersite(s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
         webbrowser.open(path + "/thisone4986349238648392.html")
         opened = True
                  
+IMGGGG = seespec("1")
 while True:
   try:
-    IMGGGG = seespec("1")
     buildpage(active=True)
     time.sleep(2)
   except KeyboardInterrupt:
