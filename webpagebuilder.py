@@ -43,6 +43,7 @@ def seefile(data, cal):
   plt.savefig(buffer, format='png')
   buffer.seek(0)
   img64 = base64.b64encode(buffer.read()).decode('utf-8')
+  plt.close()
   return img64
   
 def seeactives11():
@@ -59,6 +60,7 @@ def seeactives11():
   plt.savefig(buffer, format='png')
   buffer.seek(0)
   img64 = base64.b64encode(buffer.read()).decode('utf-8')
+  plt.close()
   return img64
   
 def grabbit():
@@ -96,6 +98,7 @@ def seetemp():
   plt.savefig(buffer, format='png')
   buffer.seek(0)
   img64 = base64.b64encode(buffer.read()).decode('utf-8')
+  plt.close()
   return img64
 
 def seespec(k):
