@@ -178,108 +178,111 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       dlist = """Antenna: """ + str(normal["ant"]) + """, Load: """ + str(normal["load"]) + """, Noise: """ + str(normal["noise"]) + """</p>
       """
   if active:
-    seespec("1")
     imtab = """
     <div class="boxes" id="s11">
       <img src="data:image/png;base64,""" + seeactives11() + """" width="400" height="300">
       <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
     </div>
       """
-    stab = """
-    <div class="boxes" id="spec">
-      <img id="sspec" src="" width="400" height="300">
-      <select class="spselect" id="spselect">
-        <option value="0">0</option>
-        <option value="02">02</option>
-        <option value="04">04</option>
-        <option value="1">1</option>
-        <option value="13">13</option>
-        <option value="15">15</option>
-        <option value="2">2</option>
-        <option value="24">24</option>
-        <option value="3">3</option>
-        <option value="35">35</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-    </div>
-    """
-    specfunc = """
-      var select = document.querySelector(".spselect");
-      var ting = select.options[select.selectedIndex];
-      var lastSelected = localStorage.getItem('spec');
-      if(lastSelected) {
-        select.value = lastSelected; 
-      }
-      select.onchange = function selectspec() {
-        var image = document.getElementById("sspec");
-        lastSelected = select.options[select.selectedIndex].value;
-        console.log(lastSelected);
-        localStorage.setItem('spec', lastSelected);
-        var sval = lastSelected;
-        if (sval === "0") {
-          image.src = "data:image/png;base64,""" + seespec("0") + """";        
-        } else if (sval === "02") {
-          image.src = "data:image/png;base64,""" + seespec("02") + """"; 
-        } else if (sval === "04") {
-          image.src = "data:image/png;base64,""" + seespec("04") + """"; 
-        } else if (sval === "1") {
-          image.src = "data:image/png;base64,""" + seespec("1") + """"; 
-        } else if (sval === "13") {
-          image.src = "data:image/png;base64,""" + seespec("13") + """"; 
-        } else if (sval === "15") {
-          image.src = "data:image/png;base64,""" + seespec("15") + """"; 
-        } else if (sval === "2") {
-          image.src = "data:image/png;base64,""" + seespec("2") + """"; 
-        } else if (sval === "24") {
-          image.src = "data:image/png;base64,""" + seespec("24") + """"; 
-        } else if (sval === "3") {
-          image.src = "data:image/png;base64,""" + seespec("3") + """"; 
-        } else if (sval === "35") {
-          image.src = "data:image/png;base64,""" + seespec("35") + """"; 
-        } else if (sval === "4") {
-          image.src = "data:image/png;base64,""" + seespec("4") + """"; 
-        } else if (sval === "5") {
-          image.src = "data:image/png;base64,""" + seespec("5") + """"; 
-        } else {
-          image.src = "data:image/png;base64,""" + seespec("1") + """";
-        }
-      }
-      """
-    specset = """
-          var sval = "0";
-          var image = document.getElementById("sspec");
-          if (sval === "0") {
-              image.src = "data:image/png;base64,""" + IMGGGG + """";        
-          } else if (sval === "02") {
-              image.src = "data:image/png;base64,""" + seespec("02") + """"; 
-          } else if (sval === "04") {
-              image.src = "data:image/png;base64,""" + seespec("04") + """"; 
-          } else if (sval === "1") {
-              image.src = "data:image/png;base64,""" + seespec("1") + """"; 
-          } else if (sval === "13") {
-              image.src = "data:image/png;base64,""" + seespec("13") + """"; 
-          } else if (sval === "15") {
-              image.src = "data:image/png;base64,""" + seespec("15") + """"; 
-          } else if (sval === "2") {
-              image.src = "data:image/png;base64,""" + seespec("2") + """"; 
-          } else if (sval === "24") {
-              image.src = "data:image/png;base64,""" + seespec("24") + """"; 
-          } else if (sval === "3") {
-              image.src = "data:image/png;base64,""" + seespec("3") + """"; 
-          } else if (sval === "35") {
-              image.src = "data:image/png;base64,""" + seespec("35") + """"; 
-          } else if (sval === "4") {
-              image.src = "data:image/png;base64,""" + seespec("4") + """"; 
-          } else if (sval === "5") {
-              image.src = "data:image/png;base64,""" + seespec("5") + """"; 
-          } else {
-              image.src = "data:image/png;base64,""" + IMGGGG + """";
-          }
-    """
-    sbutton = """
-            <button onclick="showhide('spec')">Spectrum</button>
-    """
+    stab = ""
+    sbutton = ""
+    specfunc = ""
+    specset = ""
+    # stab = """
+    # <div class="boxes" id="spec">
+    #   <img id="sspec" src="" width="400" height="300">
+    #   <select class="spselect" id="spselect">
+    #     <option value="0">0</option>
+    #     <option value="02">02</option>
+    #     <option value="04">04</option>
+    #     <option value="1">1</option>
+    #     <option value="13">13</option>
+    #     <option value="15">15</option>
+    #     <option value="2">2</option>
+    #     <option value="24">24</option>
+    #     <option value="3">3</option>
+    #     <option value="35">35</option>
+    #     <option value="4">4</option>
+    #     <option value="5">5</option>
+    #   </select>
+    # </div>
+    # """
+    # specfunc = """
+    #   var select = document.querySelector(".spselect");
+    #   var ting = select.options[select.selectedIndex];
+    #   var lastSelected = localStorage.getItem('spec');
+    #   if(lastSelected) {
+    #     select.value = lastSelected; 
+    #   }
+    #   select.onchange = function selectspec() {
+    #     var image = document.getElementById("sspec");
+    #     lastSelected = select.options[select.selectedIndex].value;
+    #     console.log(lastSelected);
+    #     localStorage.setItem('spec', lastSelected);
+    #     var sval = lastSelected;
+    #     if (sval === "0") {
+    #       image.src = "data:image/png;base64,""" + seespec("0") + """";        
+    #     } else if (sval === "02") {
+    #       image.src = "data:image/png;base64,""" + seespec("02") + """"; 
+    #     } else if (sval === "04") {
+    #       image.src = "data:image/png;base64,""" + seespec("04") + """"; 
+    #     } else if (sval === "1") {
+    #       image.src = "data:image/png;base64,""" + seespec("1") + """"; 
+    #     } else if (sval === "13") {
+    #       image.src = "data:image/png;base64,""" + seespec("13") + """"; 
+    #     } else if (sval === "15") {
+    #       image.src = "data:image/png;base64,""" + seespec("15") + """"; 
+    #     } else if (sval === "2") {
+    #       image.src = "data:image/png;base64,""" + seespec("2") + """"; 
+    #     } else if (sval === "24") {
+    #       image.src = "data:image/png;base64,""" + seespec("24") + """"; 
+    #     } else if (sval === "3") {
+    #       image.src = "data:image/png;base64,""" + seespec("3") + """"; 
+    #     } else if (sval === "35") {
+    #       image.src = "data:image/png;base64,""" + seespec("35") + """"; 
+    #     } else if (sval === "4") {
+    #       image.src = "data:image/png;base64,""" + seespec("4") + """"; 
+    #     } else if (sval === "5") {
+    #       image.src = "data:image/png;base64,""" + seespec("5") + """"; 
+    #     } else {
+    #       image.src = "data:image/png;base64,""" + seespec("1") + """";
+    #     }
+    #   }
+    #   """
+    # specset = """
+    #       var sval = "0";
+    #       var image = document.getElementById("sspec");
+    #       if (sval === "0") {
+    #           image.src = "data:image/png;base64,""" + IMGGGG + """";        
+    #       } else if (sval === "02") {
+    #           image.src = "data:image/png;base64,""" + seespec("02") + """"; 
+    #       } else if (sval === "04") {
+    #           image.src = "data:image/png;base64,""" + seespec("04") + """"; 
+    #       } else if (sval === "1") {
+    #           image.src = "data:image/png;base64,""" + seespec("1") + """"; 
+    #       } else if (sval === "13") {
+    #           image.src = "data:image/png;base64,""" + seespec("13") + """"; 
+    #       } else if (sval === "15") {
+    #           image.src = "data:image/png;base64,""" + seespec("15") + """"; 
+    #       } else if (sval === "2") {
+    #           image.src = "data:image/png;base64,""" + seespec("2") + """"; 
+    #       } else if (sval === "24") {
+    #           image.src = "data:image/png;base64,""" + seespec("24") + """"; 
+    #       } else if (sval === "3") {
+    #           image.src = "data:image/png;base64,""" + seespec("3") + """"; 
+    #       } else if (sval === "35") {
+    #           image.src = "data:image/png;base64,""" + seespec("35") + """"; 
+    #       } else if (sval === "4") {
+    #           image.src = "data:image/png;base64,""" + seespec("4") + """"; 
+    #       } else if (sval === "5") {
+    #           image.src = "data:image/png;base64,""" + seespec("5") + """"; 
+    #       } else {
+    #           image.src = "data:image/png;base64,""" + IMGGGG + """";
+    #       }
+    # """
+    # sbutton = """
+    #         <button onclick="showhide('spec')">Spectrum</button>
+    # """
   else:
     imtab = """
       <div class="boxes" id="s11">
