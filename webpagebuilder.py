@@ -98,7 +98,7 @@ def seetemp():
   return img64
 
 def seespec(k):
-  readspec = r.read_core_data(timeout = 2)
+  readspec = r.read_corr_data(timeout = 2)
   spec = readspec[2]
   plt.figure()
   plt.plot(np.log10(np.abs(spec[k])))
