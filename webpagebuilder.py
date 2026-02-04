@@ -138,7 +138,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       mia, mip, tem, tec, lid, mot, rfs = grabbit()
     except KeyError:
       print("No metadata being collected; this is going to cause problems!")
-      mia, mip, tem, tec, lid, mot, rfs = [0], [0], [0], [0], [0], [0], [0]
+      mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error"}, {"A_status": "error", "B_status": "error"}, [0], [0], [0]
     if len(s11data["VNAO"][:][1]) > 1:
       if len(s11data["rec"][:][1]) > 1:
         normal = activeflag({"rec": s11data["rec"][1:][1]},
