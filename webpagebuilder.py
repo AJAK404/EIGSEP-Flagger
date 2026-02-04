@@ -163,6 +163,90 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
     </div>
       """
+    stab = """
+    <div class="boxes" id="spec">
+      <img id="sspec" src="" width="400" height="300">
+      <select id="spselect">
+        <option value="0">0<option>
+        <option value="02">02<option>
+        <option value="04">04<option>
+        <option value="1">1<option>
+        <option value="13">13<option>
+        <option value="15">15<option>
+        <option value="2">2<option>
+        <option value="24">24<option>
+        <option value="3">3<option>
+        <option value="35">35<option>
+        <option value="4">4<option>
+        <option value="5">5<option>
+      </select>
+    </div>
+    """
+    specfunc = """
+      function selectspec() {
+        var select = document.getElementById("spselect");
+        var image = document.getElementById("sspec");
+        var sval = select.value;
+        localStorage.setItem("spec", sval);
+        if (sval === "0") {
+          image.src = "data:image/png;base64,""" + seespec("0") + """";        
+        } else if (sval === "02") {
+          image.src = "data:image/png;base64,""" + seespec("02") + """"; 
+        } else if (sval === "04") {
+          image.src = "data:image/png;base64,""" + seespec("04") + """"; 
+        } else if (sval === "1") {
+          image.src = "data:image/png;base64,""" + seespec("1") + """"; 
+        } else if (sval === "13") {
+          image.src = "data:image/png;base64,""" + seespec("13") + """"; 
+        } else if (sval === "15") {
+          image.src = "data:image/png;base64,""" + seespec("15") + """"; 
+        } else if (sval === "2") {
+          image.src = "data:image/png;base64,""" + seespec("2") + """"; 
+        } else if (sval === "24") {
+          image.src = "data:image/png;base64,""" + seespec("24") + """"; 
+        } else if (sval === "3") {
+          image.src = "data:image/png;base64,""" + seespec("3") + """"; 
+        } else if (sval === "35") {
+          image.src = "data:image/png;base64,""" + seespec("35") + """"; 
+        } else if (sval === "4") {
+          image.src = "data:image/png;base64,""" + seespec("4") + """"; 
+        } else if (sval === "5") {
+          image.src = "data:image/png;base64,""" + seespec("5") + """"; 
+        }
+      }
+      """
+    specset = """
+          var sval = localStorage.getItem("spec");
+          var image = document.getElementById("sspec");
+          if (sval === "0") {
+              image.src = "data:image/png;base64,""" + seespec("0") + """";        
+          } else if (sval === "02") {
+              image.src = "data:image/png;base64,""" + seespec("02") + """"; 
+          } else if (sval === "04") {
+              image.src = "data:image/png;base64,""" + seespec("04") + """"; 
+          } else if (sval === "1") {
+              image.src = "data:image/png;base64,""" + seespec("1") + """"; 
+          } else if (sval === "13") {
+              image.src = "data:image/png;base64,""" + seespec("13") + """"; 
+          } else if (sval === "15") {
+              image.src = "data:image/png;base64,""" + seespec("15") + """"; 
+          } else if (sval === "2") {
+              image.src = "data:image/png;base64,""" + seespec("2") + """"; 
+          } else if (sval === "24") {
+              image.src = "data:image/png;base64,""" + seespec("24") + """"; 
+          } else if (sval === "3") {
+              image.src = "data:image/png;base64,""" + seespec("3") + """"; 
+          } else if (sval === "35") {
+              image.src = "data:image/png;base64,""" + seespec("35") + """"; 
+          } else if (sval === "4") {
+              image.src = "data:image/png;base64,""" + seespec("4") + """"; 
+          } else if (sval === "5") {
+              image.src = "data:image/png;base64,""" + seespec("5") + """"; 
+          }
+    """
+    sbutton = """
+            <button onclick="showhide('spec')">Spectrum</button>
+    """
   else:
     imtab = """
       <div class="boxes" id="s11">
@@ -170,6 +254,10 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
         <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
       </div>
       """
+    stab = ""
+    specfunc = ""
+    specset = ""
+    sbutton = ""
   html = """<!DOCTYPE html>
 <html lang="en">
 <head>
