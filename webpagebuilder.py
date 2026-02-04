@@ -134,7 +134,11 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     mot = meta["motor"]
     rfs = meta["rfswitch"]
   if active:
-    mia, mip, tem, tec, lid, mot, rfs = grabbit()
+    try:       
+      mia, mip, tem, tec, lid, mot, rfs = grabbit()
+    except KeyError:
+      print("No metadata being collected; this is going to cause problems!")
+      mia, mip, tem, tec, lid, mot, rfs = [0], [0], [0], [0], [0], [0], [0]
     if len(s11data["VNAO"][:][1]) > 1:
       if len(s11data["rec"][:][1]) > 1:
         normal = activeflag({"rec": s11data["rec"][1:][1]},
