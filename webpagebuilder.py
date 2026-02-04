@@ -97,7 +97,7 @@ def seetemp():
   img64 = base64.b64encode(buffer.read()).decode('utf-8')
   return img64
 
-def seespec(k)
+def seespec(k):
   readspec = r.read_core_data(timeout = 2)
   spec = readspec[2]
   plt.figure()
