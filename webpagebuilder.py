@@ -12,7 +12,8 @@ import time
 import webbrowser
 import subprocess
 
-r = EigsepRedis(host="10.10.10.11")
+#r = EigsepRedis(host="10.10.10.11")
+r= EigsepRedis(host="192.168.10.83")
 tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
 s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.array([[0],[0]]),
            "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
