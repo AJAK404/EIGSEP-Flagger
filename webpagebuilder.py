@@ -269,6 +269,8 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
               image.src = "data:image/png;base64,""" + seespec("4") + """"; 
           } else if (sval === "5") {
               image.src = "data:image/png;base64,""" + seespec("5") + """"; 
+          } else {
+              image.src = "data:image/png;base64,""" + seespec("1") + """";
           }
     """
     sbutton = """
