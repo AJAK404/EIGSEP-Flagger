@@ -196,10 +196,10 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     <div class="boxes" id="spec">
       <img id="sspec" src="" width="400" height="300">
       <select class="spselect" id="spselect">
+        <option value="1">1</option>
         <option value="0">0</option>
         <option value="02">02</option>
         <option value="04">04</option>
-        <option value="1">1</option>
         <option value="13">13</option>
         <option value="15">15</option>
         <option value="2">2</option>
