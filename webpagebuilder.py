@@ -107,6 +107,7 @@ def seespec(k):
   plt.savefig(buffer, format='png')
   buffer.seek(0)
   img64 = base64.b64encode(buffer.read()).decode('utf-8')
+  plt.close()
   return img64
 
 def ripper(fname):
@@ -138,7 +139,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       mia, mip, tem, tec, lid, mot, rfs = grabbit()
     except KeyError:
       print("No metadata being collected; this is going to cause problems!")
-      mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error"}, {"A_status": "error", "B_status": "error"}, [0], [0], [0]
+      mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error"}, {"A_status": "error", "B_status": "error"}, {"distance_m": 0}, {"az_pos": 0, "el_pos"=0}, {"sw_state":0}
     if len(s11data["VNAO"][:][1]) > 1:
       if len(s11data["rec"][:][1]) > 1:
         normal = activeflag({"rec": s11data["rec"][1:][1]},
