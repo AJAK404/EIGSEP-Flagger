@@ -11,6 +11,7 @@ from eigsep_observing import EigsepRedis
 import time
 import webbrowser
 import subprocess
+import threading
 
 #r = EigsepRedis(host="10.10.10.11")
 r= EigsepRedis(host="192.168.10.83")
@@ -101,7 +102,20 @@ def seetemp():
   plt.close()
   return img64
 
+ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
+sthreads = {}
+running = "1"
+for k in ks:
+  spthreads[k] = threading.Thread(target=seespectrum, args=(k,))
+
 def seespec(k):
+  global running
+  global spthreads
+  running = k
+  spthreads[k].start()
+  spthreads[k].join()
+
+def seespectrum(k):
   global IMGGGG
   readspec = r.read_corr_data(timeout = 3)
   spec = readspec[2]
@@ -438,11 +452,14 @@ def foldersite(s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
       if not opened:
         webbrowser.open(path + "/thisone4986349238648392.html")
         opened = True
-                 
-IMGGGG = seespec("1")
+
+webthread = threading.Thread(target=buildpage, args=({}, {}, {}, {}, "", True, "."))
+running = "1"
+seespec("1")
 while True:
   try:
-    buildpage(active=True)
+    webthread.start()
+    webthread.join()
     time.sleep(2)
   except KeyboardInterrupt:
     print("Goodbye!!!!!!")
