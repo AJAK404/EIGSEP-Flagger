@@ -13,200 +13,208 @@ import webbrowser
 import subprocess
 import threading
 
-#r = EigsepRedis(host="10.10.10.11")
-r= EigsepRedis(host="192.168.10.83")
-tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
-s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.array([[0],[0]]),
-           "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
-           "rec": np.array([[0],[0]])}
-opene = False
-IMGGGG = "uhhhhhhhhhh"
-
-def lin(x):
-  return 20* np.log10(np.abs(x))
-
-def seefile(data, cal):
-  plt.figure()
-  colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
-            "ant": "green", "load": "blue", "noise": "purple",
-            "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
-  for yap in colors:
-    if yap[:3] == "VNA":
-      plt.plot(lin(cal[yap]), color = colors[yap],label = yap)
-    else:
-      if len(data) == 1 and yap == "rec":
-        plt.plot(lin(data[yap]), color = colors[yap],label = yap)
-      elif len(data) == 3 and yap != "rec":
-        plt.plot(lin(data[yap]), color = colors[yap],label = yap)
-  plt.title("S11")
-  plt.legend()
-  buffer = io.BytesIO()
-  plt.savefig(buffer, format='png')
-  buffer.seek(0)
-  img64 = base64.b64encode(buffer.read()).decode('utf-8')
-  plt.close()
-  return img64
+class Website: 
+  #r = EigsepRedis(host="10.10.10.11")
+  r= EigsepRedis(host="192.168.10.83")
+  tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
+  s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.array([[0],[0]]),
+             "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
+             "rec": np.array([[0],[0]])}
+  opene = False
+  IMGGGG = "uhhhhhhhhhh"
+  ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
+  sthreads = {}
+  running = "1"
   
-def seeactives11():
-  plt.figure()
-  colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
-            "ant": "green", "load": "blue", "noise": "purple",
-            "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
-  plt.title("S11")
-  for yap in colors:
-    if len(s11data[yap]) > 1:
-      plt.scatter(s11data[yap][0][1:], s11data[yap][1][1:], color = colors[yap], label = yap)
-  plt.legend(loc="lower right")
-  buffer = io.BytesIO()
-  plt.savefig(buffer, format='png')
-  buffer.seek(0)
-  img64 = base64.b64encode(buffer.read()).decode('utf-8')
-  plt.close()
-  return img64
+  for k in ks:
+    spthreads[k] = threading.Thread(target=seespectrum, args=(k,))
+
+  def __init__(self, hos="10.10.10.11"):
+    self.r = EigsepRedis(host=hos)
   
-def grabbit():
-  global tdata
-  global s11data
-  global r
-  meta = r.get_live_metadata()
-  tem = meta["temp_mon"]
-  tec = meta["tempctrl"]
-  tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
-                    [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
-  # ddict = MAGICALGRABBINGFUNCTION()
-  #for key in s11data:
-  #   if key in ddict:
-  #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
-  return meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]
+  def lin(x):
+    return 20* np.log10(np.abs(x))
   
-def seetemp():
-  global tdata
-  plt.figure()
-  colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
-            "ant": "green", "load": "blue", "noise": "purple",
-            "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
-  atm = tdata[0][tdata[0][:, 0].argsort()]
-  btm = tdata[1][tdata[1][:, 0].argsort()]
-  atc = tdata[2][tdata[2][:, 0].argsort()]
-  btc = tdata[3][tdata[3][:, 0].argsort()]
-  plt.scatter(atm[0][1:], atm[1][1:], color = "red",label = "A_Temp_Mon")
-  plt.scatter(btm[0][1:], btm[1][1:], color = "orange",label = "B_Temp_Mon")
-  plt.scatter(atc[0][1:], atc[1][1:], color = "green",label = "A_Temp_Ctrl")
-  plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
-  plt.title("Temperature")
-  plt.legend(loc="lower right")
-  buffer = io.BytesIO()
-  plt.savefig(buffer, format='png')
-  buffer.seek(0)
-  img64 = base64.b64encode(buffer.read()).decode('utf-8')
-  plt.close()
-  return img64
+  def seefile(data, cal):
+    plt.figure()
+    colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
+              "ant": "green", "load": "blue", "noise": "purple",
+              "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
+    for yap in colors:
+      if yap[:3] == "VNA":
+        plt.plot(lin(cal[yap]), color = colors[yap],label = yap)
+      else:
+        if len(data) == 1 and yap == "rec":
+          plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+        elif len(data) == 3 and yap != "rec":
+          plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+    plt.title("S11")
+    plt.legend()
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    img64 = base64.b64encode(buffer.read()).decode('utf-8')
+    plt.close()
+    return img64
+    
+  def seeactives11():
+    plt.figure()
+    colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
+              "ant": "green", "load": "blue", "noise": "purple",
+              "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
+    plt.title("S11")
+    for yap in colors:
+      if len(s11data[yap]) > 1:
+        plt.scatter(s11data[yap][0][1:], s11data[yap][1][1:], color = colors[yap], label = yap)
+    plt.legend(loc="lower right")
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    img64 = base64.b64encode(buffer.read()).decode('utf-8')
+    plt.close()
+    return img64
 
-ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
-sthreads = {}
-running = "1"
-for k in ks:
-  spthreads[k] = threading.Thread(target=seespectrum, args=(k,))
-
-def seespec(k):
-  global running
-  global spthreads
-  running = k
-  spthreads[k].start()
-  spthreads[k].join()
-
-def seespectrum(k):
-  global IMGGGG
-  readspec = r.read_corr_data(timeout = 3)
-  spec = readspec[2]
-  plt.figure()
-  plt.plot(np.log10(np.abs(spec[k])))
-  plt.title(str(k) + " " + str(readspec[1]))
-  buffer = io.BytesIO()
-  plt.savefig(buffer, format='png')
-  buffer.seek(0)
-  img64 = base64.b64encode(buffer.read()).decode('utf-8')
-  IMGGGG = img64
-  plt.close()
-  return img64
-
-def ripper(fname):
-  i= -4
-  chara = fname[i]
-  fn = ""
-  while chara != "/" and abs(i) <= len(fname):
-    fn = chara + fn
-    i -= 1
-    try:
-      chara = fname[i]
-    except:
-      return fn
-  return fn
-
-def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path="."):
-  global opene
-  global IMGGGG
-  if not active:
-    normal = activeflag(data,cal)
-    mia = meta["imu_antenna"]
-    mip = meta["imu_panda"]
+  @classmethod
+  def grabbit(cls):
+    # global tdata
+    # global s11data
+    # global r
+    meta = cls.r.get_live_metadata()
     tem = meta["temp_mon"]
     tec = meta["tempctrl"]
-    lid = meta["lidar"]
-    mot = meta["motor"]
-    rfs = meta["rfswitch"]
-  if active:
-    try:       
-      mia, mip, tem, tec, lid, mot, rfs = grabbit()
-    except KeyError:
-      print("No metadata being collected; this is going to cause problems!")
-      mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
-    if len(s11data["VNAO"][:][1]) > 1:
-      if len(s11data["rec"][:][1]) > 1:
-        normal = activeflag({"rec": s11data["rec"][1:][1]},
-                 {"VNAO": s11data["VNAO"][1:][1], "VNAS": s11data["VNAS"][1:][1], "VNAL": s11data["VNAL"][1:][1]})
+    cls.tdata = np.append(cls.tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
+                      [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
+    # ddict = MAGICALGRABBINGFUNCTION()
+    #for key in s11data:
+    #   if key in ddict:
+    #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
+    return meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]
+    
+  @classmethod
+  def seetemp(cls):
+    plt.figure()
+    colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
+              "ant": "green", "load": "blue", "noise": "purple",
+              "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
+    atm = cls.tdata[0][cls.tdata[0][:, 0].argsort()]
+    btm = cls.tdata[1][cls.tdata[1][:, 0].argsort()]
+    atc = cls.tdata[2][cls.tdata[2][:, 0].argsort()]
+    btc = cls.tdata[3][cls.tdata[3][:, 0].argsort()]
+    plt.scatter(atm[0][1:], atm[1][1:], color = "red",label = "A_Temp_Mon")
+    plt.scatter(btm[0][1:], btm[1][1:], color = "orange",label = "B_Temp_Mon")
+    plt.scatter(atc[0][1:], atc[1][1:], color = "green",label = "A_Temp_Ctrl")
+    plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
+    plt.title("Temperature")
+    plt.legend(loc="lower right")
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    img64 = base64.b64encode(buffer.read()).decode('utf-8')
+    plt.close()
+    return img64
+  
+  @classmethod
+  def seespec(cls, k):
+    # global running
+    # global spthreads
+    cls.running = k
+    cls.spthreads[k].start()
+    cls.spthreads[k].join()
+
+  @classmethod
+  def seespectrum(cls, k):
+    # global IMGGGG
+    readspec = r.read_corr_data(timeout = 3)
+    spec = readspec[2]
+    plt.figure()
+    plt.plot(np.log10(np.abs(spec[k])))
+    plt.title(str(k) + " " + str(readspec[1]))
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    img64 = base64.b64encode(buffer.read()).decode('utf-8')
+    cls.IMGGGG = img64
+    plt.close()
+    return img64
+  
+  def ripper(fname):
+    i= -4
+    chara = fname[i]
+    fn = ""
+    while chara != "/" and abs(i) <= len(fname):
+      fn = chara + fn
+      i -= 1
+      try:
+        chara = fname[i]
+      except:
+        return fn
+    return fn
+
+  @classmethod
+  def buildpage(cls, meta={}, data={}, cal={}, spec = {}, fname="", active=False, path="."):
+    # global opene
+    # global IMGGGG
+    if not active:
+      normal = activeflag(data,cal)
+      mia = meta["imu_antenna"]
+      mip = meta["imu_panda"]
+      tem = meta["temp_mon"]
+      tec = meta["tempctrl"]
+      lid = meta["lidar"]
+      mot = meta["motor"]
+      rfs = meta["rfswitch"]
+    if active:
+      try:       
+        mia, mip, tem, tec, lid, mot, rfs = grabbit()
+      except KeyError:
+        print("No metadata being collected; this is going to cause problems!")
+        mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
+      if len(s11data["VNAO"][:][1]) > 1:
+        if len(s11data["rec"][:][1]) > 1:
+          normal = activeflag({"rec": s11data["rec"][1:][1]},
+                   {"VNAO": s11data["VNAO"][1:][1], "VNAS": s11data["VNAS"][1:][1], "VNAL": s11data["VNAL"][1:][1]})
+        else:
+          normal = activeflag({"ant": s11data["ant"][1:][1], "load": s11data["load"][1:][1], "noise": s11data["noise"][1:][1]},
+                   {"VNAO": s11data["VNAO"][1:][1], "VNAS": s11data["VNAS"][1:][1], "VNAL": s11data["VNAL"][1:][1]})
       else:
-        normal = activeflag({"ant": s11data["ant"][1:][1], "load": s11data["load"][1:][1], "noise": s11data["noise"][1:][1]},
-                 {"VNAO": s11data["VNAO"][1:][1], "VNAS": s11data["VNAS"][1:][1], "VNAL": s11data["VNAL"][1:][1]})
+        normal = activeflag({"rec": s11data["rec"][:][1]},
+                   {"VNAO": s11data["VNAO"][:][1], "VNAS": s11data["VNAS"][:][1], "VNAL": s11data["VNAL"][:][1]})
     else:
-      normal = activeflag({"rec": s11data["rec"][:][1]},
-                 {"VNAO": s11data["VNAO"][:][1], "VNAS": s11data["VNAS"][:][1], "VNAL": s11data["VNAL"][:][1]})
-  else:
-    tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
-                            [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
-  tgraph = """
+      tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
+                              [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
+    tgraph = """
       <img src="data:image/png;base64,""" + seetemp() + """" width="400" height="300">
       """
-  terror = """"""
-  if True:
-    for boo in ["A_status", "B_status"]:
-      if tem[boo] == "error":
-        terror += """
+    terror = """"""
+    if True:
+      for boo in ["A_status", "B_status"]:
+        if tem[boo] == "error":
+          terror += """
         <p>Error in monitoring """ + boo + """</p>
            """
-      if tec[boo] == "error":
-        terror += """
+        if tec[boo] == "error":
+          terror += """
         <p>Error in control """ + boo + """</p>
             """
-  if True:
-    if len(normal) == 2:
-      dlist = """Recording: """ + str(normal["rec"]) + """</p>
+    if True:
+      if len(normal) == 2:
+        dlist = """Recording: """ + str(normal["rec"]) + """</p>
       """
-    else:
-      dlist = """Antenna: """ + str(normal["ant"]) + """, Load: """ + str(normal["load"]) + """, Noise: """ + str(normal["noise"]) + """</p>
+      else:
+        dlist = """Antenna: """ + str(normal["ant"]) + """, Load: """ + str(normal["load"]) + """, Noise: """ + str(normal["noise"]) + """</p>
       """
-  if active:
-    imtab = """
+    if active:
+      imtab = """
     <div class="boxes" id="s11">
       <img src="data:image/png;base64,""" + seeactives11() + """" width="400" height="300">
       <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
     </div>
       """
-    # stab = ""
-    # sbutton = ""
-    # specfunc = ""
-    # specset = "" alt forwardslash
-    stab = """
+      # stab = ""
+      # sbutton = ""
+      # specfunc = ""
+      # specset = "" alt forwardslash
+      stab = """
     <div class="boxes" id="spec">
       <img id="sspec" src="" width="400" height="300">
       <select class="spselect" id="spselect">
@@ -225,7 +233,7 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
       </select>
     </div>
     """
-    specfunc = """
+      specfunc = """
       var select = document.querySelector(".spselect");
       var ting = select.options[select.selectedIndex];
       var lastSelected = localStorage.getItem('spec');
@@ -267,24 +275,24 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
         }
       }
       """
-    specset = """
-          image.src = "data:image/png;base64,""" + IMGGGG + """";        
+      specset = """
+          image.src = "data:image/png;base64,""" + cls.IMGGGG + """";        
     """
-    sbutton = """
+      sbutton = """
             <button onclick="showhide('spec')">Spectrum</button>
     """
-  else:
-    imtab = """
+    else:
+      imtab = """
       <div class="boxes" id="s11">
         <img src="data:image/png;base64,""" + seefile(data, cal) + """" width="400" height="300">
         <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
       </div>
       """
-    stab = ""
-    specfunc = ""
-    specset = ""
-    sbutton = ""
-  html = """<!DOCTYPE html>
+      stab = ""
+      specfunc = ""
+      specset = ""
+      sbutton = ""
+    html = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <style>
@@ -430,37 +438,38 @@ def buildpage(meta={}, data={}, cal={}, spec = {}, fname="", active=False, path=
     </div>
 </body>
 </html>"""
-  fiel = ""
-  if fname == "":
-    fiel = "demo" + str(np.random.randint(1, 1000000)) + ".html"
-    fiel = "thisone4986349238648392.html"
-  else:
-    fiel = ripper(fname) + ".html"
-  with open(fiel, "w") as f:
-    f.write(html)
-    if not opene:
-      #subprocess.call(["open", "thisone4986349238648392.html"], shell=True)
-      opene = True
+    fiel = ""
+    if fname == "":
+      fiel = "demo" + str(np.random.randint(1, 1000000)) + ".html"
+      fiel = "thisone4986349238648392.html"
+    else:
+      fiel = ripper(fname) + ".html"
+    with open(fiel, "w") as f:
+      f.write(html)
+      if not cls.opene:
+        #subprocess.call(["open", "thisone4986349238648392.html"], shell=True)
+        cls.opene = True
 
-def foldersite(s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
-  opened = False
-  for path, folders, files in os.walk(s11folder):
-    for fname in files:
-      fpath = path + "/" + fname
-      data, cal, head, meta = eo.io.read_s11_file(fpath)
-      buildpage(meta, data, cal)
-      if not opened:
-        webbrowser.open(path + "/thisone4986349238648392.html")
-        opened = True
+  def foldersite(s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
+    opened = False
+    for path, folders, files in os.walk(s11folder):
+      for fname in files:
+        fpath = path + "/" + fname
+        data, cal, head, meta = eo.io.read_s11_file(fpath)
+        buildpage(meta, data, cal)
+        if not opened:
+          webbrowser.open(path + "/thisone4986349238648392.html")
+          opened = True
 
-webthread = threading.Thread(target=buildpage, args=({}, {}, {}, {}, "", True, "."))
-running = "1"
-seespec("1")
-while True:
-  try:
-    webthread.start()
-    webthread.join()
-    time.sleep(2)
-  except KeyboardInterrupt:
-    print("Goodbye!!!!!!")
-    break
+#------
+def refresh():
+  while True:
+    try: 
+      Website.buildpage(active=True)
+      time.sleep(2)
+    except KeyboardInterrupt:
+      print("Goodbye!!!!!!")
+      break
+webthread = threading.Thread(target=refresh, args=())
+webthread.start()
+webthread.join()
