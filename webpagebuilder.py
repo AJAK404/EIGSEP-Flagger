@@ -409,8 +409,10 @@ class Website:
       """ + terror + """
     </div>
     </div>
-    <div class="notebook">
+    <div>
     """ + stab + """
+    <div/>
+    <div class="notebook">
     <div class="boxes" id="tool">
       <h4 style="text-align: center">Motor</h4>
       <div class="mon">
