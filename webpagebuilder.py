@@ -27,6 +27,7 @@ class Website:
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
   specgraphs = {}
   running = "1"
+  spec={}
 
   def __init__(self, hos="10.10.10.11"):
     self.r = EigsepRedis(host=hos)
@@ -118,16 +119,9 @@ class Website:
   
   @classmethod
   def seespec(cls, k):
-    return specgraphs[k]
-
-  @classmethod
-  def seespectrum(cls, ks):
-    # global IMGGGG
-    readspec = r2.read_corr_data(timeout = 3)
-    spec = readspec[2]
     for k in ks:
       plt.figure()
-      plt.plot(np.log10(np.abs(spec[k])))
+      plt.plot(np.log10(np.abs(cls.spec[k])))
       plt.title(str(k) + " " + str(readspec[1]))
       buffer = io.BytesIO()
       plt.savefig(buffer, format='png')
@@ -135,6 +129,13 @@ class Website:
       img64 = base64.b64encode(buffer.read()).decode('utf-8')
       cls.specgraphs[k] = img64
       plt.close()
+    return cls.specgraphs[k]
+
+  @classmethod
+  def seespectrum(cls, ks):
+    # global IMGGGG
+    readspec = r2.read_corr_data(timeout = 3)
+    cls.spec = readspec[2]
   
   def ripper(fname):
     i= -4
@@ -446,6 +447,8 @@ def refresh():
       specthread.join()
       print("Goodbye!!!!!!")
       break
-webthread = threading.Thread(target=refresh, args=())
-webthread.start()
-webthread.join()
+
+refresh()
+# webthread = threading.Thread(target=refresh, args=())
+# webthread.start()
+# webthread.join()
