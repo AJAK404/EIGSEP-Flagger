@@ -457,7 +457,7 @@ while True:
       time.sleep(2)
     except KeyboardInterrupt:
       methread.join()
-      specthread.join()
+      spthread.join()
       print("Goodbye!!!!!!")
       break
 # webthread = threading.Thread(target=refresh, args=())
