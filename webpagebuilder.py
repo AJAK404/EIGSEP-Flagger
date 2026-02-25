@@ -169,7 +169,7 @@ class Website:
       rfs = meta["rfswitch"]
     if active:
       try:       
-        mia, mip, tem, tec, lid, mot, rfs = grabbe()
+        mia, mip, tem, tec, lid, mot, rfs = Website.grabbe()
       except KeyError:
         print("No metadata being collected; this is going to cause problems!")
         mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
