@@ -27,7 +27,7 @@ class Website:
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
   specgraphs = {}
   running = "1"
-  spec={}
+  spec={"0": [], "02": [], "04": [], "1": [], "13": [], "15": [], "2": [], "24": [], "3": [], "35": [], "4": [], "5": []}
 
   def __init__(self, hos="10.10.10.11"):
     self.r = EigsepRedis(host=hos)
@@ -120,6 +120,7 @@ class Website:
   
   @classmethod
   def seespec(cls, n):
+    print(cls.spec)
     for k in cls.ks:
       plt.figure()
       plt.plot(np.log10(np.abs(cls.spec[k])))
