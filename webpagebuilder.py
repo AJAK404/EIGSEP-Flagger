@@ -27,7 +27,6 @@ class Website:
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
   specgraphs = {}
   running = "1"
-  tgraph
   
   spthread = threading.Thread(target=seespectrum, args=(ks,))
   methread = threading.Thread(target=grabbit, args=())
