@@ -137,8 +137,8 @@ class Website:
   @classmethod
   def seespectrum(cls, ks):
     # global IMGGGG
-    cls.readspec = eo.io.reshape_data(cls.r2.read_corr_data(timeout = 3))
-    cls.spec = cls.readspec[2]
+    cls.readspec = cls.r2.read_corr_data(timeout = 3)
+    cls.spec = eo.io.reshape_data(cls.readspec[2])
   
   def ripper(fname):
     i= -4
