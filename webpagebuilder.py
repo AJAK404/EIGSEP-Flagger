@@ -152,11 +152,6 @@ class Website:
       except:
         return fn
     return fn
-    
-  spthread = threading.Thread(target=seespectrum, args=(ks,))
-  methread = threading.Thread(target=grabbit, args=())
-  spthread.start()
-  methread.start()
   
   @classmethod
   def buildpage(cls, meta={}, data={}, cal={}, spec = {}, fname="", active=False, path="."):
@@ -451,6 +446,11 @@ class Website:
           opened = True
 
 #------
+spthread = threading.Thread(target=Website.seespectrum, args=(ks,))
+methread = threading.Thread(target=Website.grabbit, args=())
+spthread.start()
+methread.start()
+
 while True:
     try:
       Website.buildpage(active=True)
