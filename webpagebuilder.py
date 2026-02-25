@@ -446,7 +446,7 @@ class Website:
           opened = True
 
 #------
-spthread = threading.Thread(target=Website.seespectrum, args=(ks,))
+spthread = threading.Thread(target=Website.seespectrum, args=(Website.ks,))
 methread = threading.Thread(target=Website.grabbit, args=())
 spthread.start()
 methread.start()
