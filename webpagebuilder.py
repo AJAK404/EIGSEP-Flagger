@@ -187,7 +187,7 @@ class Website:
       tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                               [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
     tgraph = """
-      <img src="data:image/png;base64,""" + seetemp() + """" width="400" height="300">
+      <img src="data:image/png;base64,""" + Website.seetemp() + """" width="400" height="300">
       """
     terror = """"""
     if True:
@@ -232,18 +232,18 @@ class Website:
       <button onclick="showhide('g35')">35</button>
       <button onclick="showhide('g4')">4</button>
       <button onclick="showhide('g5')">5</button>
-      <img id="g0" display="none" src="data:image/png;base64,""" + seespec("0") + """" width="400" height="300"> 
-      <img id="g02" display="none" src="data:image/png;base64,""" + seespec("02") + """" width="400" height="300"> 
-      <img id="g04" display="none" src="data:image/png;base64,""" + seespec("04") + """" width="400" height="300"> 
-      <img id="g1" display="block" src="data:image/png;base64,""" + seespec("1") + """" width="400" height="300">
-      <img id="g13" display="none" src="data:image/png;base64,""" + seespec("13") + """" width="400" height="300"> 
-      <img id="g15" display="none" src="data:image/png;base64,""" + seespec("15") + """" width="400" height="300"> 
-      <img id="g2" display="none" src="data:image/png;base64,""" + seespec("2") + """" width="400" height="300"> 
-      <img id="g24" display="none" src="data:image/png;base64,""" + seespec("24") + """" width="400" height="300">  
-      <img id="g3" display="none" src="data:image/png;base64,""" + seespec("3") + """" width="400" height="300">  
-      <img id="g35" display="none" src="data:image/png;base64,""" + seespec("35") + """" width="400" height="300">  
-      <img id="g4" display="none" src="data:image/png;base64,""" + seespec("4") + """" width="400" height="300">  
-      <img id="g5" display="none" src="data:image/png;base64,""" + seespec("5") + """" width="400" height="300">  
+      <img id="g0" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="400" height="300"> 
+      <img id="g02" display="none" src="data:image/png;base64,""" + Website.seespec("02") + """" width="400" height="300"> 
+      <img id="g04" display="none" src="data:image/png;base64,""" + Website.seespec("04") + """" width="400" height="300"> 
+      <img id="g1" display="block" src="data:image/png;base64,""" + Website.seespec("1") + """" width="400" height="300">
+      <img id="g13" display="none" src="data:image/png;base64,""" + Website.seespec("13") + """" width="400" height="300"> 
+      <img id="g15" display="none" src="data:image/png;base64,""" + Website.seespec("15") + """" width="400" height="300"> 
+      <img id="g2" display="none" src="data:image/png;base64,""" + Website.seespec("2") + """" width="400" height="300"> 
+      <img id="g24" display="none" src="data:image/png;base64,""" + Website.seespec("24") + """" width="400" height="300">  
+      <img id="g3" display="none" src="data:image/png;base64,""" + Website.seespec("3") + """" width="400" height="300">  
+      <img id="g35" display="none" src="data:image/png;base64,""" + Website.seespec("35") + """" width="400" height="300">  
+      <img id="g4" display="none" src="data:image/png;base64,""" + Website.seespec("4") + """" width="400" height="300">  
+      <img id="g5" display="none" src="data:image/png;base64,""" + Website.seespec("5") + """" width="400" height="300">  
     </div>
     """
       specfunc = """
@@ -258,7 +258,7 @@ class Website:
     else:
       imtab = """
       <div class="boxes" id="s11">
-        <img src="data:image/png;base64,""" + seefile(data, cal) + """" width="400" height="300">
+        <img src="data:image/png;base64,""" + Website.seefile(data, cal) + """" width="400" height="300">
         <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
       </div>
       """
@@ -417,7 +417,7 @@ class Website:
       fiel = "demo" + str(np.random.randint(1, 1000000)) + ".html"
       fiel = "thisone4986349238648392.html"
     else:
-      fiel = ripper(fname) + ".html"
+      fiel = Website.ripper(fname) + ".html"
     with open(fiel, "w") as f:
       f.write(html)
       if not cls.opene:
@@ -430,7 +430,7 @@ class Website:
       for fname in files:
         fpath = path + "/" + fname
         data, cal, head, meta = eo.io.read_s11_file(fpath)
-        buildpage(meta, data, cal)
+        Website.buildpage(meta, data, cal)
         if not opened:
           webbrowser.open(path + "/thisone4986349238648392.html")
           opened = True
