@@ -14,20 +14,25 @@ import subprocess
 import threading
 
 class Website: 
-  #r = EigsepRedis(host="10.10.10.11")
-  r= EigsepRedis(host="192.168.10.83")
+  r2 = EigsepRedis(host="10.10.10.10")
+  r = EigsepRedis(host="10.10.10.11")
+  #r= EigsepRedis(host="192.168.10.83")
   tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
   s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.array([[0],[0]]),
              "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
              "rec": np.array([[0],[0]])}
   opene = False
   IMGGGG = "uhhhhhhhhhh"
+  mlist = [[0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}]
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
-  sthreads = {}
+  specgraphs = {}
   running = "1"
+  tgraph
   
-  for k in ks:
-    spthreads[k] = threading.Thread(target=seespectrum, args=(k,))
+  spthread = threading.Thread(target=seespectrum, args=(ks,))
+  methread = threading.Thread(target=grabbit, args=())
+  spthread.start()
+  methread.start()
 
   def __init__(self, hos="10.10.10.11"):
     self.r = EigsepRedis(host=hos)
@@ -88,7 +93,11 @@ class Website:
     #for key in s11data:
     #   if key in ddict:
     #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
-    return meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]
+    cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
+
+  @classmethod
+  def grabbe(cls):
+    return cls.mlist[0], cls.mlist[1], cls.mlist[2], cls.mlist[3], cls.mlist[4], cls.mlist[5], cls.mlist[6],
     
   @classmethod
   def seetemp(cls):
@@ -115,27 +124,23 @@ class Website:
   
   @classmethod
   def seespec(cls, k):
-    # global running
-    # global spthreads
-    cls.running = k
-    cls.spthreads[k].start()
-    cls.spthreads[k].join()
+    return specgraphs[k]
 
   @classmethod
-  def seespectrum(cls, k):
+  def seespectrum(cls, ks):
     # global IMGGGG
     readspec = r.read_corr_data(timeout = 3)
     spec = readspec[2]
-    plt.figure()
-    plt.plot(np.log10(np.abs(spec[k])))
-    plt.title(str(k) + " " + str(readspec[1]))
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    img64 = base64.b64encode(buffer.read()).decode('utf-8')
-    cls.IMGGGG = img64
-    plt.close()
-    return img64
+    for k in ks:
+      plt.figure()
+      plt.plot(np.log10(np.abs(spec[k])))
+      plt.title(str(k) + " " + str(readspec[1]))
+      buffer = io.BytesIO()
+      plt.savefig(buffer, format='png')
+      buffer.seek(0)
+      img64 = base64.b64encode(buffer.read()).decode('utf-8')
+      cls.specgraphs[k] = img64
+      plt.close()
   
   def ripper(fname):
     i= -4
@@ -165,7 +170,7 @@ class Website:
       rfs = meta["rfswitch"]
     if active:
       try:       
-        mia, mip, tem, tec, lid, mot, rfs = grabbit()
+        mia, mip, tem, tec, lid, mot, rfs = grabbe()
       except KeyError:
         print("No metadata being collected; this is going to cause problems!")
         mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
@@ -216,21 +221,7 @@ class Website:
       # specset = "" alt forwardslash
       stab = """
     <div class="boxes" id="spec">
-      <img id="sspec" src="" width="400" height="300">
-      <select class="spselect" id="spselect">
-        <option value="1">1</option>
-        <option value="0">0</option>
-        <option value="02">02</option>
-        <option value="04">04</option>
-        <option value="13">13</option>
-        <option value="15">15</option>
-        <option value="2">2</option>
-        <option value="24">24</option>
-        <option value="3">3</option>
-        <option value="35">35</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
+      <button onclick="showhide('img')">Spectrum</button>
     </div>
     """
       specfunc = """
@@ -468,6 +459,8 @@ def refresh():
       Website.buildpage(active=True)
       time.sleep(2)
     except KeyboardInterrupt:
+      methread.join()
+      specthread.join()
       print("Goodbye!!!!!!")
       break
 webthread = threading.Thread(target=refresh, args=())
