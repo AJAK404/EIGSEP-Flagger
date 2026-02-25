@@ -124,7 +124,7 @@ class Website:
     for k in cls.ks:
       plt.figure()
       plt.plot(np.log10(np.abs(cls.spec[k])))
-      plt.title(str(k) + " " + str(readspec[1]))
+      plt.title(str(k))
       buffer = io.BytesIO()
       plt.savefig(buffer, format='png')
       buffer.seek(0)
@@ -441,6 +441,7 @@ class Website:
 #------
 while True:
     try: 
+      print(type(Website.buildpage))
       Website.buildpage(active=True)
       time.sleep(2)
     except KeyboardInterrupt:
