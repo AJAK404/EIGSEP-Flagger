@@ -236,18 +236,18 @@ class Website:
       <button onclick="showhide('g35')">35</button>
       <button onclick="showhide('g4')">4</button>
       <button onclick="showhide('g5')">5</button>
-      <img id="g0" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="400" height="300"> 
-      <img id="g02" display="none" src="data:image/png;base64,""" + Website.seespec("02") + """" width="400" height="300"> 
-      <img id="g04" display="none" src="data:image/png;base64,""" + Website.seespec("04") + """" width="400" height="300"> 
-      <img id="g1" display="block" src="data:image/png;base64,""" + Website.seespec("1") + """" width="400" height="300">
-      <img id="g13" display="none" src="data:image/png;base64,""" + Website.seespec("13") + """" width="400" height="300"> 
-      <img id="g15" display="none" src="data:image/png;base64,""" + Website.seespec("15") + """" width="400" height="300"> 
-      <img id="g2" display="none" src="data:image/png;base64,""" + Website.seespec("2") + """" width="400" height="300"> 
-      <img id="g24" display="none" src="data:image/png;base64,""" + Website.seespec("24") + """" width="400" height="300">  
-      <img id="g3" display="none" src="data:image/png;base64,""" + Website.seespec("3") + """" width="400" height="300">  
-      <img id="g35" display="none" src="data:image/png;base64,""" + Website.seespec("35") + """" width="400" height="300">  
-      <img id="g4" display="none" src="data:image/png;base64,""" + Website.seespec("4") + """" width="400" height="300">  
-      <img id="g5" display="none" src="data:image/png;base64,""" + Website.seespec("5") + """" width="400" height="300">  
+      <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="400" height="300"> 
+      <img id="g02" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("02") + """" width="400" height="300"> 
+      <img id="g04" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("04") + """" width="400" height="300"> 
+      <img id="g1" class="gs" display="block" src="data:image/png;base64,""" + Website.seespec("1") + """" width="400" height="300">
+      <img id="g13" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("13") + """" width="400" height="300"> 
+      <img id="g15" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("15") + """" width="400" height="300"> 
+      <img id="g2" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("2") + """" width="400" height="300"> 
+      <img id="g24" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("24") + """" width="400" height="300">  
+      <img id="g3" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("3") + """" width="400" height="300">  
+      <img id="g35" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("35") + """" width="400" height="300">  
+      <img id="g4" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("4") + """" width="400" height="300">  
+      <img id="g5" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("5") + """" width="400" height="300">  
     </div>
     """
       specfunc = """
@@ -333,6 +333,15 @@ class Website:
           }
           for (var i = 0; i < boxes.length; i++) {
             var thing = boxes[i].id
+            var btheme = localStorage.getItem(thing.concat("sh"));
+            if (btheme === "on") {
+              boxes[i].style.display = "block";
+            } else if (btheme === "off") {
+              boxes[i].style.display = "none";
+            }
+          }
+          for (var i = 0, i < gs.length; i++){
+            var thing = gs[i].id
             var btheme = localStorage.getItem(thing.concat("sh"));
             if (btheme === "on") {
               boxes[i].style.display = "block";
