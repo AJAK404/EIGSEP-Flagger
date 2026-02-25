@@ -221,50 +221,34 @@ class Website:
       # specset = "" alt forwardslash
       stab = """
     <div class="boxes" id="spec">
-      <button onclick="showhide('img')">Spectrum</button>
+      <button onclick="showhide('g0')">0</button>
+      <button onclick="showhide('g02')">02</button>
+      <button onclick="showhide('g04')">04</button>
+      <button onclick="showhide('g1')">1</button>
+      <button onclick="showhide('g13')">13</button>
+      <button onclick="showhide('g15')">15</button>
+      <button onclick="showhide('g2')">2</button>
+      <button onclick="showhide('g24')">24</button>
+      <button onclick="showhide('g3')">3</button>
+      <button onclick="showhide('g35')">35</button>
+      <button onclick="showhide('g4')">4</button>
+      <button onclick="showhide('g5')">5</button>
+      <img id="g0" display="none" src="data:image/png;base64,""" + seespec("0") + """" width="400" height="300"> 
+      <img id="g02" display="none" src="data:image/png;base64,""" + seespec("02") + """" width="400" height="300"> 
+      <img id="g04" display="none" src="data:image/png;base64,""" + seespec("04") + """" width="400" height="300"> 
+      <img id="g1" display="block" src="data:image/png;base64,""" + seespec("1") + """" width="400" height="300">
+      <img id="g13" display="none" src="data:image/png;base64,""" + seespec("13") + """" width="400" height="300"> 
+      <img id="g15" display="none" src="data:image/png;base64,""" + seespec("15") + """" width="400" height="300"> 
+      <img id="g2" display="none" src="data:image/png;base64,""" + seespec("2") + """" width="400" height="300"> 
+      <img id="g24" display="none" src="data:image/png;base64,""" + seespec("24") + """" width="400" height="300">  
+      <img id="g3" display="none" src="data:image/png;base64,""" + seespec("3") + """" width="400" height="300">  
+      <img id="g35" display="none" src="data:image/png;base64,""" + seespec("35") + """" width="400" height="300">  
+      <img id="g4" display="none" src="data:image/png;base64,""" + seespec("4") + """" width="400" height="300">  
+      <img id="g5" display="none" src="data:image/png;base64,""" + seespec("5") + """" width="400" height="300">  
     </div>
     """
       specfunc = """
-      var select = document.querySelector(".spselect");
-      var ting = select.options[select.selectedIndex];
-      var lastSelected = localStorage.getItem('spec');
-      if(lastSelected) {
-        select.value = lastSelected; 
-      }
-      select.onchange = function selectspec() {
-        var image = document.getElementById("sspec");
-        lastSelected = select.options[select.selectedIndex].value;
-        console.log(lastSelected);
-        localStorage.setItem('spec', lastSelected);
-        var sval = lastSelected;
-        if (sval === "1") {
-          image.src = "data:image/png;base64,""" + seespec("1") + """";        
-        } else if (sval === "0") {
-          image.src = "data:image/png;base64,""" + seespec("0") + """"; 
-        } else if (sval === "02") {
-          image.src = "data:image/png;base64,""" + seespec("02") + """"; 
-        } else if (sval === "04") {
-          image.src = "data:image/png;base64,""" + seespec("04") + """"; 
-        } else if (sval === "13") {
-          image.src = "data:image/png;base64,""" + seespec("13") + """"; 
-        } else if (sval === "15") {
-          image.src = "data:image/png;base64,""" + seespec("15") + """"; 
-        } else if (sval === "2") {
-          image.src = "data:image/png;base64,""" + seespec("2") + """"; 
-        } else if (sval === "24") {
-          image.src = "data:image/png;base64,""" + seespec("24") + """"; 
-        } else if (sval === "3") {
-          image.src = "data:image/png;base64,""" + seespec("3") + """"; 
-        } else if (sval === "35") {
-          image.src = "data:image/png;base64,""" + seespec("35") + """"; 
-        } else if (sval === "4") {
-          image.src = "data:image/png;base64,""" + seespec("4") + """"; 
-        } else if (sval === "5") {
-          image.src = "data:image/png;base64,""" + seespec("5") + """"; 
-        } else {
-          image.src = "data:image/png;base64,""" + seespec("1") + """";
-        }
-      }
+          
       """
       specset = """
           image.src = "data:image/png;base64,""" + cls.IMGGGG + """";        
