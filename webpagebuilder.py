@@ -63,8 +63,8 @@ class Website:
               "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
     plt.title("S11")
     for yap in colors:
-      if len(s11data[yap]) > 1:
-        plt.scatter(s11data[yap][0][1:], s11data[yap][1][1:], color = colors[yap], label = yap)
+      if len(cls.s11data[yap]) > 1:
+        plt.scatter(cls.s11data[yap][0][1:], cls.s11data[yap][1][1:], color = colors[yap], label = yap)
     plt.legend(loc="lower right")
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
@@ -173,16 +173,16 @@ class Website:
       except KeyError:
         print("No metadata being collected; this is going to cause problems!")
         mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
-      if len(s11data["VNAO"][:][1]) > 1:
-        if len(s11data["rec"][:][1]) > 1:
-          normal = activeflag({"rec": s11data["rec"][1:][1]},
-                   {"VNAO": s11data["VNAO"][1:][1], "VNAS": s11data["VNAS"][1:][1], "VNAL": s11data["VNAL"][1:][1]})
+      if len(cls.s11data["VNAO"][:][1]) > 1:
+        if len(cls.s11data["rec"][:][1]) > 1:
+          normal = activeflag({"rec": cls.s11data["rec"][1:][1]},
+                   {"VNAO": cls.s11data["VNAO"][1:][1], "VNAS": cls.s11data["VNAS"][1:][1], "VNAL": cls.s11data["VNAL"][1:][1]})
         else:
-          normal = activeflag({"ant": s11data["ant"][1:][1], "load": s11data["load"][1:][1], "noise": s11data["noise"][1:][1]},
-                   {"VNAO": s11data["VNAO"][1:][1], "VNAS": s11data["VNAS"][1:][1], "VNAL": s11data["VNAL"][1:][1]})
+          normal = activeflag({"ant": cls.s11data["ant"][1:][1], "load": cls.s11data["load"][1:][1], "noise": cls.s11data["noise"][1:][1]},
+                   {"VNAO": cls.s11data["VNAO"][1:][1], "VNAS": cls.s11data["VNAS"][1:][1], "VNAL": cls.s11data["VNAL"][1:][1]})
       else:
-        normal = activeflag({"rec": s11data["rec"][:][1]},
-                   {"VNAO": s11data["VNAO"][:][1], "VNAS": s11data["VNAS"][:][1], "VNAL": s11data["VNAL"][:][1]})
+        normal = activeflag({"rec": cls.s11data["rec"][:][1]},
+                   {"VNAO": cls.s11data["VNAO"][:][1], "VNAS": cls.s11data["VNAS"][:][1], "VNAL": cls.s11data["VNAL"][:][1]})
     else:
       tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                               [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
