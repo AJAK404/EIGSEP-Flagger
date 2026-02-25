@@ -27,11 +27,6 @@ class Website:
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
   specgraphs = {}
   running = "1"
-  
-  spthread = threading.Thread(target=seespectrum, args=(ks,))
-  methread = threading.Thread(target=grabbit, args=())
-  spthread.start()
-  methread.start()
 
   def __init__(self, hos="10.10.10.11"):
     self.r = EigsepRedis(host=hos)
@@ -153,7 +148,12 @@ class Website:
       except:
         return fn
     return fn
-
+    
+  spthread = threading.Thread(target=seespectrum, args=(ks,))
+  methread = threading.Thread(target=grabbit, args=())
+  spthread.start()
+  methread.start()
+  
   @classmethod
   def buildpage(cls, meta={}, data={}, cal={}, spec = {}, fname="", active=False, path="."):
     # global opene
