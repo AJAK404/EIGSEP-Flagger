@@ -17,6 +17,7 @@ class Website:
   r2 = EigsepRedis(host="10.10.10.10")
   r = EigsepRedis(host="10.10.10.11")
   #r= EigsepRedis(host="192.168.10.83")
+  readspec = []
   tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
   s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.array([[0],[0]]),
              "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
@@ -136,8 +137,8 @@ class Website:
   @classmethod
   def seespectrum(cls, ks):
     # global IMGGGG
-    readspec = r2.read_corr_data(timeout = 3)
-    cls.spec = readspec[2]
+    cls.readspec = r2.read_corr_data(timeout = 3)
+    cls.spec = cls.readspec[2]
   
   def ripper(fname):
     i= -4
@@ -440,8 +441,7 @@ class Website:
 
 #------
 while True:
-    try: 
-      print(type(Website.buildpage))
+    try:
       Website.buildpage(active=True)
       time.sleep(2)
     except KeyboardInterrupt:
