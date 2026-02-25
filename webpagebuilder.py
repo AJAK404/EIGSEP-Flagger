@@ -56,7 +56,8 @@ class Website:
     img64 = base64.b64encode(buffer.read()).decode('utf-8')
     plt.close()
     return img64
-    
+
+  @classmethod
   def seeactives11():
     plt.figure()
     colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
