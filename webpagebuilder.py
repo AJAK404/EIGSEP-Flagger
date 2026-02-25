@@ -439,8 +439,7 @@ class Website:
           opened = True
 
 #------
-def refresh():
-  while True:
+while True:
     try: 
       Website.buildpage(active=True)
       time.sleep(2)
@@ -449,8 +448,6 @@ def refresh():
       specthread.join()
       print("Goodbye!!!!!!")
       break
-
-refresh()
 # webthread = threading.Thread(target=refresh, args=())
 # webthread.start()
 # webthread.join()
