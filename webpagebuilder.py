@@ -212,11 +212,11 @@ class Website:
     if active:
       imtab = """
     <div class="boxes" id="s11">
-      <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="400" height="300">
+      
       <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
     </div>
       """
-      # stab = ""
+      # stab = "" <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="400" height="300">
       # sbutton = ""
       # specfunc = ""
       # specset = "" alt forwardslash
