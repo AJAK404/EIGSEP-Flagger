@@ -119,8 +119,8 @@ class Website:
     return img64
   
   @classmethod
-  def seespec(cls, k):
-    for k in ks:
+  def seespec(cls, n):
+    for k in cls.ks:
       plt.figure()
       plt.plot(np.log10(np.abs(cls.spec[k])))
       plt.title(str(k) + " " + str(readspec[1]))
@@ -130,7 +130,7 @@ class Website:
       img64 = base64.b64encode(buffer.read()).decode('utf-8')
       cls.specgraphs[k] = img64
       plt.close()
-    return cls.specgraphs[k]
+    return cls.specgraphs[n]
 
   @classmethod
   def seespectrum(cls, ks):
