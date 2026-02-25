@@ -129,7 +129,7 @@ class Website:
   @classmethod
   def seespectrum(cls, ks):
     # global IMGGGG
-    readspec = r.read_corr_data(timeout = 3)
+    readspec = r2.read_corr_data(timeout = 3)
     spec = readspec[2]
     for k in ks:
       plt.figure()
