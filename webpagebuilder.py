@@ -123,7 +123,7 @@ class Website:
   def seespec(cls):
     print(cls.spec)
     plt.figure()
-    for k in cls.ks:
+    for k in ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]:
       plt.plot(np.log10(np.abs(cls.spec[k])), label=k)
     plt.title("Spectra")
     plt.legend()
