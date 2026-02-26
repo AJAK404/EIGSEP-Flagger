@@ -93,7 +93,6 @@ class Website:
       #   if key in ddict:
       #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
       cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
-      print("Metadata was refreshed!")
 
   @classmethod
   def grabbe(cls):
@@ -447,7 +446,8 @@ x=0
 while True:
     try:
       Website.buildpage(active=True)
-      print("Webpage refreshed " + str(x) + " times.")
+      #print("Webpage refreshed " + str(x) + " times.")
+      print(Website.tdata)
       time.sleep(2)
       x+=1
     except KeyboardInterrupt:
