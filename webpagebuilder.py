@@ -28,7 +28,7 @@ class Website:
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
   specgraphs = {}
   running = "1"
-  spec={"0": np.array([]), "02": np.array([]), "04": np.array([]), "1": np.array([]), "13": np.array([]), "15": np.array([]), "2": np.array([]), "24": np.array([]), "3": np.array([]), "35": np.array([]), "4": np.array([]), "5": np.array([])}
+  spec={"0": np.array([0]), "02": np.array([0]), "04": np.array([0]), "1": np.array([0]), "13": np.array([0]), "15": np.array([0]), "2": np.array([0]), "24": np.array([0]), "3": np.array([0]), "35": np.array([0]), "4": np.array([0]), "5": np.array([0])}
 
   def __init__(self, hos="10.10.10.11"):
     self.r = EigsepRedis(host=hos)
