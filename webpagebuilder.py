@@ -28,7 +28,7 @@ class Website:
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
   specgraphs = {}
   running = "1"
-  spec={"0": [], "02": [], "04": [], "1": [], "13": [], "15": [], "2": [], "24": [], "3": [], "35": [], "4": [], "5": []}
+  spec={"0": np.array([]), "02": np.array([]), "04": np.array([]), "1": np.array([]), "13": np.array([]), "15": np.array([]), "2": np.array([]), "24": np.array([]), "3": np.array([]), "35": np.array([]), "4": np.array([]), "5": np.array([])}
 
   def __init__(self, hos="10.10.10.11"):
     self.r = EigsepRedis(host=hos)
@@ -120,18 +120,19 @@ class Website:
     return img64
   
   @classmethod
-  def seespec(cls, n):
+  def seespec(cls):
     print(cls.spec)
+    plt.figure()
     for k in cls.ks:
-      plt.figure()
-      plt.plot(np.log10(np.abs(cls.spec[k])))
-      plt.title(str(k))
-      buffer = io.BytesIO()
-      plt.savefig(buffer, format='png')
-      buffer.seek(0)
-      img64 = base64.b64encode(buffer.read()).decode('utf-8')
-      cls.specgraphs[k] = img64
-      plt.close()
+      plt.plot(np.log10(np.abs(cls.spec[k])), label=k)
+    plt.title("Spectra")
+    plt.legend()
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    img64 = base64.b64encode(buffer.read()).decode('utf-8')
+    cls.specgraphs[k] = img64
+    plt.close()
     return cls.specgraphs[n]
 
   @classmethod
@@ -219,30 +220,32 @@ class Website:
       # specset = "" alt forwardslash
       stab = """
     <div class="boxes" id="spec">
-      <button onclick="showhide('g0')">0</button>
-      <button onclick="showhide('g02')">02</button>
-      <button onclick="showhide('g04')">04</button>
-      <button onclick="showhide('g1')">1</button>
-      <button onclick="showhide('g13')">13</button>
-      <button onclick="showhide('g15')">15</button>
-      <button onclick="showhide('g2')">2</button>
-      <button onclick="showhide('g24')">24</button>
-      <button onclick="showhide('g3')">3</button>
-      <button onclick="showhide('g35')">35</button>
-      <button onclick="showhide('g4')">4</button>
-      <button onclick="showhide('g5')">5</button>
-      <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="400" height="300"> 
-      <img id="g02" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("02") + """" width="400" height="300"> 
-      <img id="g04" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("04") + """" width="400" height="300"> 
-      <img id="g1" class="gs" display="block" src="data:image/png;base64,""" + Website.seespec("1") + """" width="400" height="300">
-      <img id="g13" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("13") + """" width="400" height="300"> 
-      <img id="g15" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("15") + """" width="400" height="300"> 
-      <img id="g2" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("2") + """" width="400" height="300"> 
-      <img id="g24" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("24") + """" width="400" height="300">  
-      <img id="g3" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("3") + """" width="400" height="300">  
-      <img id="g35" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("35") + """" width="400" height="300">  
-      <img id="g4" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("4") + """" width="400" height="300">  
-      <img id="g5" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("5") + """" width="400" height="300">  
+    """ +
+      # <button onclick="showhide('g0')">0</button>
+      # <button onclick="showhide('g02')">02</button>
+      # <button onclick="showhide('g04')">04</button>
+      # <button onclick="showhide('g1')">1</button>
+      # <button onclick="showhide('g13')">13</button>
+      # <button onclick="showhide('g15')">15</button>
+      # <button onclick="showhide('g2')">2</button>
+      # <button onclick="showhide('g24')">24</button>
+      # <button onclick="showhide('g3')">3</button>
+      # <button onclick="showhide('g35')">35</button>
+      # <button onclick="showhide('g4')">4</button>
+      # <button onclick="showhide('g5')">5</button>
+      # <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="400" height="300"> 
+      # <img id="g02" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("02") + """" width="400" height="300"> 
+      # <img id="g04" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("04") + """" width="400" height="300"> 
+      # <img id="g1" class="gs" display="block" src="data:image/png;base64,""" + Website.seespec("1") + """" width="400" height="300">
+      # <img id="g13" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("13") + """" width="400" height="300"> 
+      # <img id="g15" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("15") + """" width="400" height="300"> 
+      # <img id="g2" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("2") + """" width="400" height="300"> 
+      # <img id="g24" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("24") + """" width="400" height="300">  
+      # <img id="g3" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("3") + """" width="400" height="300">  
+      # <img id="g35" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("35") + """" width="400" height="300">  
+      # <img id="g4" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("4") + """" width="400" height="300">
+      """
+      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + Website.seespec() + """" width="400" height="300">  
     </div>
     """
       specfunc = """
