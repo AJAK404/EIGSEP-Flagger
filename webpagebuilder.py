@@ -172,9 +172,9 @@ class Website:
     if active:
       try:       
         mia, mip, tem, tec, lid, mot, rfs = Website.grabbe()
-      except KeyError:
-        print("No metadata being collected; this is going to cause problems!")
-        mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
+      #except KeyError:
+       # print("No metadata being collected; this is going to cause problems!")
+        #mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
       if len(cls.s11data["VNAO"][:][1]) > 1:
         if len(cls.s11data["rec"][:][1]) > 1:
           normal = activeflag({"rec": cls.s11data["rec"][1:][1]},
