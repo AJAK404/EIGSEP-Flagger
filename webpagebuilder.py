@@ -220,8 +220,11 @@ class Website:
       # specset = "" alt forwardslash
       stab = """
     <div class="boxes" id="spec">
-    """ +
-      # <button onclick="showhide('g0')">0</button>
+    """ + """
+      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + Website.seespec() + """" width="400" height="300">  
+    </div>
+    """
+    # <button onclick="showhide('g0')">0</button>
       # <button onclick="showhide('g02')">02</button>
       # <button onclick="showhide('g04')">04</button>
       # <button onclick="showhide('g1')">1</button>
@@ -244,10 +247,6 @@ class Website:
       # <img id="g3" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("3") + """" width="400" height="300">  
       # <img id="g35" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("35") + """" width="400" height="300">  
       # <img id="g4" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("4") + """" width="400" height="300">
-      """
-      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + Website.seespec() + """" width="400" height="300">  
-    </div>
-    """
       specfunc = """
           
       """
