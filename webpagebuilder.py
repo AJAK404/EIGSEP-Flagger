@@ -220,7 +220,7 @@ class Website:
       stab = """
     <div class="boxes" id="spec">
     """ + """
-      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + Website.seespec() + """" width="400" height="300">  
+      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + Website.seespec() + """" width="800" height="600">  
     </div>
     """
     # <button onclick="showhide('g0')">0</button>
@@ -390,15 +390,12 @@ class Website:
         </div>
     </div>
     <div class="notebook">
-    """ + imtab + """
+    """ + stab + """
     <div class="boxes" id="temps">
       """ + tgraph + """
       """ + terror + """
     </div>
     </div>
-    <div>
-    """ + stab + """
-    <div/>
     <div class="notebook">
     <div class="boxes" id="tool">
       <h4 style="text-align: center">Motor</h4>
