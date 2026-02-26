@@ -131,9 +131,8 @@ class Website:
     plt.savefig(buffer, format='png')
     buffer.seek(0)
     img64 = base64.b64encode(buffer.read()).decode('utf-8')
-    cls.specgraphs[k] = img64
     plt.close()
-    return cls.specgraphs[n]
+    return img64
 
   @classmethod
   def seespectrum(cls, ks):
