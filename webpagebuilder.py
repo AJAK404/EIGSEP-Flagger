@@ -328,16 +328,7 @@ class Website:
             }
           }
           for (var i = 0; i < boxes.length; i++) {
-            var thing = boxes[i].id
-            var btheme = localStorage.getItem(thing.concat("sh"));
-            if (btheme === "on") {
-              boxes[i].style.display = "block";
-            } else if (btheme === "off") {
-              boxes[i].style.display = "none";
-            }
-          }
-          for (var i = 0, i < gs.length; i++){
-            var thing = gs[i].id
+            var thing = boxes[i].id;
             var btheme = localStorage.getItem(thing.concat("sh"));
             if (btheme === "on") {
               boxes[i].style.display = "block";
