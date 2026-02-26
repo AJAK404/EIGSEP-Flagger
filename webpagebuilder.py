@@ -121,7 +121,7 @@ class Website:
   
   @classmethod
   def seespec(cls):
-    print(cls.spec)
+    cls.spec["0"]
     plt.figure()
     for k in ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]:
       plt.plot(np.log10(np.abs(cls.spec[k])), label=k)
