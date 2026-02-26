@@ -14,6 +14,7 @@ import subprocess
 import threading
 
 class Website: 
+  flag = True
   r2 = EigsepRedis(host="10.10.10.10")
   r = EigsepRedis(host="10.10.10.11")
   #r= EigsepRedis(host="192.168.10.83")
@@ -78,19 +79,20 @@ class Website:
 
   @classmethod
   def grabbit(cls):
-    # global tdata
-    # global s11data
-    # global r
-    meta = cls.r.get_live_metadata()
-    tem = meta["temp_mon"]
-    tec = meta["tempctrl"]
-    cls.tdata = np.append(cls.tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
-                      [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
-    # ddict = MAGICALGRABBINGFUNCTION()
-    #for key in s11data:
-    #   if key in ddict:
-    #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
-    cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
+    while cls.flag:
+      # global tdata
+      # global s11data
+      # global r
+      meta = cls.r.get_live_metadata()
+      tem = meta["temp_mon"]
+      tec = meta["tempctrl"]
+      cls.tdata = np.append(cls.tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
+                        [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
+      # ddict = MAGICALGRABBINGFUNCTION()
+      #for key in s11data:
+      #   if key in ddict:
+      #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
+      cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
 
   @classmethod
   def grabbe(cls):
@@ -136,9 +138,10 @@ class Website:
 
   @classmethod
   def seespectrum(cls, ks):
-    # global IMGGGG
-    cls.readspec = cls.r2.read_corr_data(timeout = 3)
-    cls.spec = eo.io.reshape_data(cls.readspec[2])
+    while cls.flag:
+      # global IMGGGG
+      cls.readspec = cls.r2.read_corr_data(timeout = 3)
+      cls.spec = eo.io.reshape_data(cls.readspec[2])
   
   def ripper(fname):
     i= -4
@@ -439,12 +442,15 @@ spthread = threading.Thread(target=Website.seespectrum, args=(Website.ks,))
 methread = threading.Thread(target=Website.grabbit, args=())
 spthread.start()
 methread.start()
-
+x=0
 while True:
     try:
       Website.buildpage(active=True)
+      print("Webpage refreshed " + x + " times.")
       time.sleep(2)
+      x+=1
     except KeyboardInterrupt:
+      Website.flag = False
       methread.join()
       spthread.join()
       print("Goodbye!!!!!!")
