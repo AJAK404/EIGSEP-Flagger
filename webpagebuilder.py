@@ -92,6 +92,7 @@ class Website:
       #for key in s11data:
       #   if key in ddict:
       #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
+      time.sleep(.1)
       cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
 
   @classmethod
