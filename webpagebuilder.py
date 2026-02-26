@@ -446,7 +446,7 @@ x=0
 while True:
     try:
       Website.buildpage(active=True)
-      print("Webpage refreshed " + x + " times.")
+      print("Webpage refreshed " + str(x) + " times.")
       time.sleep(2)
       x+=1
     except KeyboardInterrupt:
