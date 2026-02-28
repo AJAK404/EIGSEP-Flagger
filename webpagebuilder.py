@@ -302,7 +302,7 @@ class Website:
         .boxes {
             border: 2px solid yellow;
       		  background-color: #383838;
-      		  width: 800px;
+      		  width: 45%;
             margin: 10px;
             padding: 10px;
             display: inline-block;
