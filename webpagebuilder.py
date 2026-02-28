@@ -189,7 +189,7 @@ class Website:
       tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                               [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
     tgraph = """
-      <img src="data:image/png;base64,""" + cls.seetemp() + """" width="400" height="300">
+      <img src="data:image/png;base64,""" + cls.seetemp() + """" width="40%">
       """
     terror = """"""
     if True:
@@ -216,14 +216,14 @@ class Website:
       <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
     </div>
       """
-      # stab = "" <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="400" height="300">
+      # stab = "" <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="40%">
       # sbutton = ""
       # specfunc = ""
       # specset = "" alt forwardslash
       stab = """
     <div class="boxes" id="spec">
     """ + """
-      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="800" height="600">  
+      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="40%">  
     </div>
     """
     # <button onclick="showhide('g0')">0</button>
@@ -238,7 +238,7 @@ class Website:
       # <button onclick="showhide('g35')">35</button>
       # <button onclick="showhide('g4')">4</button>
       # <button onclick="showhide('g5')">5</button>
-      # <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="400" height="300"> 
+      # <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="40%"> 
       # <img id="g02" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("02") + """" width="400" height="300"> 
       # <img id="g04" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("04") + """" width="400" height="300"> 
       # <img id="g1" class="gs" display="block" src="data:image/png;base64,""" + Website.seespec("1") + """" width="400" height="300">
@@ -261,7 +261,7 @@ class Website:
     else:
       imtab = """
       <div class="boxes" id="s11">
-        <img src="data:image/png;base64,""" + cls.seefile(data, cal) + """" width="400" height="300">
+        <img src="data:image/png;base64,""" + cls.seefile(data, cal) + """" width="40%">
         <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
       </div>
       """
