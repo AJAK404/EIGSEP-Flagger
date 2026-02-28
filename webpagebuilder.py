@@ -30,9 +30,6 @@ class Website:
   specgraphs = {}
   running = "1"
   spec={"0": np.array([0]), "02": np.array([0]), "04": np.array([0]), "1": np.array([0]), "13": np.array([0]), "15": np.array([0]), "2": np.array([0]), "24": np.array([0]), "3": np.array([0]), "35": np.array([0]), "4": np.array([0]), "5": np.array([0])}
-
-  def __init__(self, hos="10.10.10.11"):
-    self.r = EigsepRedis(host=hos)
   
   def lin(x):
     return 20* np.log10(np.abs(x))
@@ -445,20 +442,21 @@ class Website:
           opened = True
 
 #------
-spthread = threading.Thread(target=Website.seespectrum, args=(Website.ks,))
-methread = threading.Thread(target=Website.grabbit, args=())
+w = Website()
+spthread = threading.Thread(target=w.seespectrum, args=(Website.ks,))
+methread = threading.Thread(target=w.grabbit, args=())
 spthread.start()
 methread.start()
 x=0
 while True:
     try:
-      Website.buildpage(active=True)
+      w.buildpage(active=True)
       #print("Webpage refreshed " + str(x) + " times.")
-      print(Website.tdata)
+      w.check()
       time.sleep(2)
       x+=1
     except KeyboardInterrupt:
-      Website.flag = False
+      w.flag = False
       methread.join()
       spthread.join()
       print("Goodbye!!!!!!")
