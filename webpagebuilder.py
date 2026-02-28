@@ -89,11 +89,13 @@ class Website:
       #for key in s11data:
       #   if key in ddict:
       #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
-      time.sleep(.1)
       cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
+      time.sleep(.1)
+      print("Metadata in grabbing thread: \n")
 
   @classmethod
   def grabbe(cls):
+    print("Metadata in main threat to page: \n")
     return cls.mlist[0], cls.mlist[1], cls.mlist[2], cls.mlist[3], cls.mlist[4], cls.mlist[5], cls.mlist[6],
     
   @classmethod
@@ -426,8 +428,8 @@ class Website:
 
   @classmethod
   def check():
-    print("Metadata: \n" + str(cls.mlist))
-    print("Temperature: \n" + str(cls.tdata))
+    print("Metadata for page: \n" + str(cls.grabbe()))
+    #print("Temperature: \n" + str(cls.tdata))
   
   @classmethod
   def foldersite(cls, s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
