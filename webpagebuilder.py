@@ -443,8 +443,8 @@ class Website:
 
 #------
 w = Website()
-spthread = threading.Thread(target=w.seespectrum, args=(Website.ks,))
-methread = threading.Thread(target=w.grabbit, args=())
+spthread = threading.Thread(target=w.seespectrum, args=(Website.ks,), daemon=True)
+methread = threading.Thread(target=w.grabbit, args=(), daemon=True)
 spthread.start()
 methread.start()
 x=0
@@ -457,8 +457,6 @@ while True:
       x+=1
     except KeyboardInterrupt:
       w.flag = False
-      methread.join()
-      spthread.join()
       print("Goodbye!!!!!!")
       break
 # webthread = threading.Thread(target=refresh, args=())
