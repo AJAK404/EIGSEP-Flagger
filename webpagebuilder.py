@@ -172,7 +172,7 @@ class Website:
       rfs = meta["rfswitch"]
     if active:
       try:       
-        mia, mip, tem, tec, lid, mot, rfs = Website.grabbe()
+        mia, mip, tem, tec, lid, mot, rfs = cls.grabbe()
       #except KeyError:
        # print("No metadata being collected; this is going to cause problems!")
         #mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
@@ -190,7 +190,7 @@ class Website:
       tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                               [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
     tgraph = """
-      <img src="data:image/png;base64,""" + Website.seetemp() + """" width="400" height="300">
+      <img src="data:image/png;base64,""" + cls.seetemp() + """" width="400" height="300">
       """
     terror = """"""
     if True:
@@ -224,7 +224,7 @@ class Website:
       stab = """
     <div class="boxes" id="spec">
     """ + """
-      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + Website.seespec() + """" width="800" height="600">  
+      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="800" height="600">  
     </div>
     """
     # <button onclick="showhide('g0')">0</button>
@@ -262,7 +262,7 @@ class Website:
     else:
       imtab = """
       <div class="boxes" id="s11">
-        <img src="data:image/png;base64,""" + Website.seefile(data, cal) + """" width="400" height="300">
+        <img src="data:image/png;base64,""" + cls.seefile(data, cal) + """" width="400" height="300">
         <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
       </div>
       """
@@ -420,20 +420,26 @@ class Website:
       fiel = "demo" + str(np.random.randint(1, 1000000)) + ".html"
       fiel = "thisone4986349238648392.html"
     else:
-      fiel = Website.ripper(fname) + ".html"
+      fiel = cls.ripper(fname) + ".html"
     with open(fiel, "w") as f:
       f.write(html)
       if not cls.opene:
         #subprocess.call(["open", "thisone4986349238648392.html"], shell=True)
         cls.opene = True
 
-  def foldersite(s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
+  @classmethod
+  def check():
+    print("Metadata: \n" + str(cls.mlist))
+    print("Temperature: \n" + str(cls.tdata))
+  
+  @classmethod
+  def foldersite(cls, s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
     opened = False
     for path, folders, files in os.walk(s11folder):
       for fname in files:
         fpath = path + "/" + fname
         data, cal, head, meta = eo.io.read_s11_file(fpath)
-        Website.buildpage(meta, data, cal)
+        cls.buildpage(meta, data, cal)
         if not opened:
           webbrowser.open(path + "/thisone4986349238648392.html")
           opened = True
