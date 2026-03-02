@@ -428,8 +428,8 @@ class Website:
 
   @classmethod
   def check(cls):
-    #print("Metadata for page: \n" + str(cls.grabbe()))
-    #print("Temperature: \n" + str(cls.tdata))
+    print("Metadata for page: \n" + str(cls.grabbe()))
+    print("Temperature: \n" + str(cls.tdata))
   
   @classmethod
   def foldersite(cls, s11folder, path="~/EIGSEP-Flagger"): ## Will evolve.
@@ -454,7 +454,7 @@ while True:
     try:
       w.buildpage(active=True)
       #print("Webpage refreshed " + str(x) + " times.")
-      w.check()
+      #w.check()
       time.sleep(2)
       x+=1
     except KeyboardInterrupt:
