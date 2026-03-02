@@ -91,11 +91,11 @@ class Website:
       #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
       cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
       time.sleep(.1)
-      print("Metadata in grabbing thread: \n" + str(cls.mlist))
+      #print("Metadata in grabbing thread: \n" + str(cls.mlist))
 
   @classmethod
   def grabbe(cls):
-    print("Metadata in main thread to page: \n" + str(cls.mlist))
+    #print("Metadata in main thread to page: \n" + str(cls.mlist))
     return cls.mlist[0], cls.mlist[1], cls.mlist[2], cls.mlist[3], cls.mlist[4], cls.mlist[5], cls.mlist[6],
     
   @classmethod
@@ -105,13 +105,13 @@ class Website:
               "ant": "green", "load": "blue", "noise": "purple",
               "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
     atm = cls.tdata[0][cls.tdata[0][:, 0].argsort()]
-    btm = cls.tdata[1][cls.tdata[1][:, 0].argsort()]
-    atc = cls.tdata[2][cls.tdata[2][:, 0].argsort()]
-    btc = cls.tdata[3][cls.tdata[3][:, 0].argsort()]
+    #btm = cls.tdata[1][cls.tdata[1][:, 0].argsort()]
+    #atc = cls.tdata[2][cls.tdata[2][:, 0].argsort()]
+    #btc = cls.tdata[3][cls.tdata[3][:, 0].argsort()]
     plt.scatter(atm[0][1:], atm[1][1:], color = "red",label = "A_Temp_Mon")
-    plt.scatter(btm[0][1:], btm[1][1:], color = "orange",label = "B_Temp_Mon")
-    plt.scatter(atc[0][1:], atc[1][1:], color = "green",label = "A_Temp_Ctrl")
-    plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
+    #plt.scatter(btm[0][1:], btm[1][1:], color = "orange",label = "B_Temp_Mon")
+    #plt.scatter(atc[0][1:], atc[1][1:], color = "green",label = "A_Temp_Ctrl")
+    #plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
     plt.title("Temperature")
     plt.legend(loc="lower right")
     buffer = io.BytesIO()
@@ -428,7 +428,7 @@ class Website:
 
   @classmethod
   def check(cls):
-    print("Metadata for page: \n" + str(cls.grabbe()))
+    #print("Metadata for page: \n" + str(cls.grabbe()))
     #print("Temperature: \n" + str(cls.tdata))
   
   @classmethod
