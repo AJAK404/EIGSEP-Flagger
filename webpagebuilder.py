@@ -427,7 +427,7 @@ class Website:
         cls.opene = True
 
   @classmethod
-  def check():
+  def check(cls):
     print("Metadata for page: \n" + str(cls.grabbe()))
     #print("Temperature: \n" + str(cls.tdata))
   
