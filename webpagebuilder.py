@@ -91,11 +91,11 @@ class Website:
       #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
       cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
       time.sleep(.1)
-      print("Metadata in grabbing thread: \n")
+      print("Metadata in grabbing thread: \n" + str(cls.mlist))
 
   @classmethod
   def grabbe(cls):
-    print("Metadata in main threat to page: \n")
+    print("Metadata in main thread to page: \n" + str(cls.mlist))
     return cls.mlist[0], cls.mlist[1], cls.mlist[2], cls.mlist[3], cls.mlist[4], cls.mlist[5], cls.mlist[6],
     
   @classmethod
