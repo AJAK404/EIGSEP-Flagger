@@ -28,7 +28,7 @@ class Website:
   mlist = [[0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}]
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
   specgraphs = {}
-  kimgs = {"0": "", "02": "", "04": "", "1": "", "13": "": "15": "", "2": "", "24": "", "3": "", "35": "", "4": "", "5": "", "all": ""}
+  kimgs = {"0": "", "02": "", "04": "", "1": "", "13": "", "15": "", "2": "", "24": "", "3": "", "35": "", "4": "", "5": "", "all": ""}
   running = "1"
   spec={"0": np.array([0]), "02": np.array([0]), "04": np.array([0]), "1": np.array([0]), "13": np.array([0]), "15": np.array([0]), "2": np.array([0]), "24": np.array([0]), "3": np.array([0]), "35": np.array([0]), "4": np.array([0]), "5": np.array([0])}
   
