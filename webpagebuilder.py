@@ -20,9 +20,8 @@ class Website:
   #r= EigsepRedis(host="192.168.10.83")
   readspec = []
   tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
-  s11data = {"VNAO": np.array([[0],[0]]), "VNAS": np.array([[0],[0]]), "VNAL": np.array([[0],[0]]),
-             "ant": np.array([[0],[0]]), "load": np.array([[0],[0]]), "noise": np.array([[0],[0]]),
-             "rec": np.array([[0],[0]])}
+  data = {}
+  cal = {}
   opene = False
   IMGGGG = "uhhhhhhhhhh"
   mlist = [[0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}]
@@ -65,8 +64,13 @@ class Website:
               "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
     plt.title("S11")
     for yap in colors:
-      if len(cls.s11data[yap]) > 1:
-        plt.scatter(cls.s11data[yap][0][1:], cls.s11data[yap][1][1:], color = colors[yap], label = yap)
+      if yap[:3] == "VNA":
+        plt.plot(lin(cls.cal[yap]), color = colors[yap],label = yap)
+      else:
+        if len(data) == 1 and yap == "rec":
+          plt.plot(lin(cls.data[yap]), color = colors[yap],label = yap)
+        elif len(data) == 3 and yap != "rec":
+          plt.plot(lin(cls.data[yap]), color = colors[yap],label = yap)
     plt.legend(loc="lower right")
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
@@ -75,6 +79,11 @@ class Website:
     plt.close()
     return img64
 
+  def grabs11():
+    d, c, h, m = cls.read_vna_data()
+    cls.data = d
+    cls.cal = c
+  
   @classmethod
   def grabbit(cls):
     while cls.flag:
@@ -101,18 +110,22 @@ class Website:
   
   @classmethod
   def seetemp(cls):
+    if len(cls.tdata) > 100:
+      x = len(cls.tdata) - 100
+    else:
+      x = 0
     plt.figure()
     if cls.mlist[2]["A_status"] != "error":
-      atm = cls.tdata[0][cls.tdata[0][:, 0].argsort()]
+      atm = cls.tdata[0][cls.tdata[0][x:, 0].argsort()]
       plt.scatter(atm[0][1:], atm[1][1:], color = "red",label = "A_Temp_Mon")
     if cls.mlist[2]["B_status"] != "error":
-      btm = cls.tdata[1][cls.tdata[1][:, 0].argsort()]
+      btm = cls.tdata[1][cls.tdata[1][x:, 0].argsort()]
       plt.scatter(btm[0][1:], btm[1][1:], color = "orange",label = "B_Temp_Mon")
     if cls.mlist[3]["A_status"] != "error":
-      atc = cls.tdata[2][cls.tdata[2][:, 0].argsort()]
+      atc = cls.tdata[2][cls.tdata[2][x:, 0].argsort()]
       plt.scatter(atc[0][1:], atc[1][1:], color = "green",label = "A_Temp_Ctrl")
     if cls.mlist[3]["B_status"] != "error":
-      btc = cls.tdata[3][cls.tdata[3][:, 0].argsort()]
+      btc = cls.tdata[3][cls.tdata[3][x:, 0].argsort()]
       plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
     plt.title("Temperature")
     plt.legend(loc="lower right")
@@ -228,7 +241,7 @@ class Website:
     if active:
       imtab = """
     <div class="boxes" id="s11">
-      
+      <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="90%">
       <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
     </div>
       """
@@ -468,8 +481,10 @@ class Website:
 w = Website()
 spthread = threading.Thread(target=w.seespectrum, args=(Website.ks,), daemon=True)
 methread = threading.Thread(target=w.grabbit, args=(), daemon=True)
+methread = threading.Thread(target=w.grabs11, args=(), daemon=True)
 spthread.start()
 methread.start()
+s11thread.start()
 #x=0
 #print("Do you want the Chaos? (Type N for no.)")
 #y = input()
