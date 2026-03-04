@@ -97,21 +97,22 @@ class Website:
   def grabbe(cls):
     #print("Metadata in main thread to page: \n" + str(cls.mlist))
     return cls.mlist[0], cls.mlist[1], cls.mlist[2], cls.mlist[3], cls.mlist[4], cls.mlist[5], cls.mlist[6],
-    
+  
   @classmethod
   def seetemp(cls):
     plt.figure()
-    colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
-              "ant": "green", "load": "blue", "noise": "purple",
-              "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
-    atm = cls.tdata[0][cls.tdata[0][:, 0].argsort()]
-    #btm = cls.tdata[1][cls.tdata[1][:, 0].argsort()]
-    #atc = cls.tdata[2][cls.tdata[2][:, 0].argsort()]
-    #btc = cls.tdata[3][cls.tdata[3][:, 0].argsort()]
-    plt.scatter(atm[0][1:], atm[1][1:], color = "red",label = "A_Temp_Mon")
-    #plt.scatter(btm[0][1:], btm[1][1:], color = "orange",label = "B_Temp_Mon")
-    #plt.scatter(atc[0][1:], atc[1][1:], color = "green",label = "A_Temp_Ctrl")
-    #plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
+    if cls.mlist[2]["A_status"] != "error":
+      atm = cls.tdata[0][cls.tdata[0][:, 0].argsort()]
+      plt.scatter(atm[0][1:], atm[1][1:], color = "red",label = "A_Temp_Mon")
+    if cls.mlist[2]["B_status"] != "error":
+      btm = cls.tdata[1][cls.tdata[1][:, 0].argsort()]
+      plt.scatter(btm[0][1:], btm[1][1:], color = "orange",label = "B_Temp_Mon")
+    if cls.mlist[3]["A_status"] != "error":
+      atc = cls.tdata[2][cls.tdata[2][:, 0].argsort()]
+      plt.scatter(atc[0][1:], atc[1][1:], color = "green",label = "A_Temp_Ctrl")
+    if cls.mlist[3]["B_status"] != "error":
+      btc = cls.tdata[3][cls.tdata[3][:, 0].argsort()]
+      plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
     plt.title("Temperature")
     plt.legend(loc="lower right")
     buffer = io.BytesIO()
@@ -189,7 +190,7 @@ class Website:
       tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                               [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
     tgraph = """
-      <img src="data:image/png;base64,""" + cls.seetemp() + """" width="40%">
+      <img src="data:image/png;base64,""" + cls.seetemp() + """" width="90%">
       """
     terror = """"""
     if True:
@@ -216,14 +217,14 @@ class Website:
       <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
     </div>
       """
-      # stab = "" <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="40%">
+      # stab = "" <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="90%">
       # sbutton = ""
       # specfunc = ""
       # specset = "" alt forwardslash
       stab = """
     <div class="boxes" id="spec">
     """ + """
-      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="40%">  
+      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="90%">  
     </div>
     """
     # <button onclick="showhide('g0')">0</button>
@@ -238,7 +239,7 @@ class Website:
       # <button onclick="showhide('g35')">35</button>
       # <button onclick="showhide('g4')">4</button>
       # <button onclick="showhide('g5')">5</button>
-      # <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="40%"> 
+      # <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="90%"> 
       # <img id="g02" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("02") + """" width="400" height="300"> 
       # <img id="g04" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("04") + """" width="400" height="300"> 
       # <img id="g1" class="gs" display="block" src="data:image/png;base64,""" + Website.seespec("1") + """" width="400" height="300">
@@ -261,7 +262,7 @@ class Website:
     else:
       imtab = """
       <div class="boxes" id="s11">
-        <img src="data:image/png;base64,""" + cls.seefile(data, cal) + """" width="40%">
+        <img src="data:image/png;base64,""" + cls.seefile(data, cal) + """" width="90%">
         <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
       </div>
       """
@@ -411,6 +412,7 @@ class Website:
       <p>Lidar Distance: """ + str(lid["distance_m"]) + """ meters</p>
       <p>Switch State: """ + str(bin(rfs["sw_state"]))[::-1] + """</p>
     </div>
+    """ + imtab + """
     </div>
 </body>
 </html>"""
