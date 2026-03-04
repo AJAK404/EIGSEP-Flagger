@@ -484,10 +484,10 @@ spthread = threading.Thread(target=w.seespectrum, args=(Website.ks,), daemon=Tru
 methread = threading.Thread(target=w.grabbit, args=(), daemon=True)
 spthread.start()
 methread.start()
-x=0
-print("Do you want the Chaos? (Type N for no.)")
-y = input()
-if y != "N" and y != "n":
+#x=0
+#print("Do you want the Chaos? (Type N for no.)")
+#y = input()
+if True:#y != "N" and y != "n":
   THREADS = {"all": threading.Thread(target=w.seespec, args=(True,), daemon=True)}
   for k in w.ks:
     THREADS[k] = threading.Thread(target=w.secspec, args=(k,), daemon=True)
@@ -499,7 +499,7 @@ while True:
       #print("Webpage refreshed " + str(x) + " times.")
       #w.check()
       time.sleep(2)
-      x+=1
+      #x+=1
     except KeyboardInterrupt:
       w.flag = False
       print("Goodbye!!!!!!")
