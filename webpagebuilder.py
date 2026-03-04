@@ -15,83 +15,59 @@ import threading
 from datetime import datetime
 
 class Website: 
-  flag = True
-  r2 = EigsepRedis(host="10.10.10.10")
-  r = EigsepRedis(host="10.10.10.11")
+  flag = True # Tells functions running on a loop to stop when flag is false.
+  r2 = EigsepRedis(host="10.10.10.10") # For spectrum.
+  r = EigsepRedis(host="10.10.10.11") # For metadata and S11 data.
   #r= EigsepRedis(host="192.168.10.83")
-  readspec = []
-  tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
-  data = {"ant": [0], "load": [0], "noise": [0], "rec": [0]}
-  cal = {"VNAO": [0], "VNAS": [0], "VNAL": [0]}
-  opene = False
-  IMGGGG = "uhhhhhhhhhh"
-  mlist = [[0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}]
-  ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
-  specgraphs = {}
-  #kimgs = {"0": "", "02": "", "04": "", "1": "", "13": "", "15": "", "2": "", "24": "", "3": "", "35": "", "4": "", "5": "", "all": ""}
-  running = "1"
-  spec={"0": np.array([0]), "02": np.array([0]), "04": np.array([0]), "1": np.array([0]), "13": np.array([0]), "15": np.array([0]), "2": np.array([0]), "24": np.array([0]), "3": np.array([0]), "35": np.array([0]), "4": np.array([0]), "5": np.array([0])}
+  readspec = [] # Contains all spectrum data. 
+  tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]]) # Contains the points for, in this order,
+  #the monitored temperature A and B and the control temperature A and B, with time as the first coordinate.
+  #This empty placeholder provides a base and is not plotted.
+  data = {"ant": [0], "load": [0], "noise": [0], "rec": [0]} # Contains the S11 data; this empty placeholder avouds keyerrors.
+  cal = {"VNAO": [0], "VNAS": [0], "VNAL": [0]} # Contains the S11 calibration data; this empty placeholder avoids keyerrors.
+  opene = False # Denotes whether the website has been opened or not.
+  mlist = [[0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, 
+           {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, 
+           {"az_pos": 0, "el_pos": 0}, {"sw_state":0}] # Contains metadata; this empty placeholder avoids keyerrors. 
+  ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"] # A list of all possible spectra.
+  spec={"0": np.array([0]), "02": np.array([0]), "04": np.array([0]), "1": np.array([0]), "13": np.array([0]), "15": np.array([0]), 
+        "2": np.array([0]), "24": np.array([0]), "3": np.array([0]), "35": np.array([0]), "4": np.array([0]), "5": np.array([0])}
+  # Contains graphable spectrum data; this empty placeholder avoids keyerrors.
   
-  def lin(x):
+  def lin(x): # Linearizes the datapoints in x.
     return 20* np.log10(np.abs(x))
   
-  def seefile(data, cal):
+  def seefile(data, cal): # Plots the S11 data.
     plt.figure()
     colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
               "ant": "green", "load": "blue", "noise": "purple",
               "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
-    for yap in colors:
-      if yap[:3] == "VNA":
+    for yap in colors: # Goes through each key in data.
+      if yap[:3] == "VNA": # If the key begins with VNA, it is in cal, and should be taken as such.
         plt.plot(lin(cal[yap]), color = colors[yap],label = yap)
-      else:
-        if len(data) == 1 and yap == "rec":
+      else: # Otherwise, it is in data.
+        if len(data) == 1 and yap == "rec": # If it is rec, and data contains rec, plot it.
           plt.plot(lin(data[yap]), color = colors[yap],label = yap)
-        elif len(data) == 3 and yap != "rec":
+        elif len(data) == 3 and yap != "rec": # If it is not rec, and the data does not contain rec, plot it.
           plt.plot(lin(data[yap]), color = colors[yap],label = yap)
     plt.title("S11")
     plt.legend()
-    buffer = io.BytesIO()
+    buffer = io.BytesIO() # All the following converts the image of the plot to a string.
     plt.savefig(buffer, format='png')
     buffer.seek(0)
     img64 = base64.b64encode(buffer.read()).decode('utf-8')
     plt.close()
-    return img64
+    return img64 # Returns the image as a string.
 
-  @classmethod
-  def seeactives11():
-    plt.figure()
-    colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
-              "ant": "green", "load": "blue", "noise": "purple",
-              "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
-    plt.title("S11")
-    for yap in colors:
-      if yap[:3] == "VNA":
-        plt.plot(lin(cls.cal[yap]), color = colors[yap],label = yap)
-      else:
-        if len(data) == 1 and yap == "rec":
-          plt.plot(lin(cls.data[yap]), color = colors[yap],label = yap)
-        elif len(data) == 3 and yap != "rec":
-          plt.plot(lin(cls.data[yap]), color = colors[yap],label = yap)
-    plt.legend(loc="lower right")
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    img64 = base64.b64encode(buffer.read()).decode('utf-8')
-    plt.close()
-    return img64
-
-  def grabs11():
-    while cls.flag:
-      d, c, h, m = cls.r.read_vna_data()
+  def grabs11(): # Grabs S11 data on the S11 thread.
+    while cls.flag: # Stops when the program ends.
+      d, c, h, m = cls.r.read_vna_data() # Gets data, cal, header, and metadata.
       cls.data = d
       cls.cal = c
   
   @classmethod
-  def grabbit(cls):
+  def grabbit(cls): # Grabs metadata on the metadata thread.
     while cls.flag:
-      # global tdata
-      # global s11data
-      # global r datetime.fromtimestamp(
       meta = cls.r.get_live_metadata()
       tem = meta["temp_mon"]
       tec = meta["tempctrl"]
@@ -99,27 +75,24 @@ class Website:
                                         [[datetime.fromtimestamp(tem["B_timestamp"])], [tem["B_temp"]]],
                                         [[datetime.fromtimestamp(tec["A_timestamp"])], [tec["A_T_now"]]], 
                                         [[datetime.fromtimestamp(tec["B_timestamp"])], [tec["B_T_now"]]]], axis = 2)
-      # ddict = MAGICALGRABBINGFUNCTION()
-      #for key in s11data:
-      #   if key in ddict:
-      #    s11data[key] = np.append(s11data[key], [[timestamp],[point]], axis = 1)
+      # Adds a datapoint of format (datetime, temperature) to the temperature array.
       cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
-      time.sleep(.1)
+      time.sleep(.1) # Limits rate of metadata grabbing.
       #print("Metadata in grabbing thread: \n" + str(cls.mlist))
 
   @classmethod
-  def grabbe(cls):
+  def grabbe(cls): # Get each part of metadata for the website in a conveinet manner.
     #print("Metadata in main thread to page: \n" + str(cls.mlist))
     return cls.mlist[0], cls.mlist[1], cls.mlist[2], cls.mlist[3], cls.mlist[4], cls.mlist[5], cls.mlist[6],
   
   @classmethod
-  def seetemp(cls):
-    if len(cls.tdata) > 100:
-      x = len(cls.tdata) - 100
-    else:
+  def seetemp(cls): # Graphs the temperature.
+    if len(cls.tdata) > 1200: # Graphs the last 1200 temperatures recorded.
+      x = len(cls.tdata) - 1200
+    else: # If 1200 temperatures do not exist, graphs what is there.
       x = 0
     plt.figure()
-    if cls.mlist[2]["A_status"] != "error":
+    if cls.mlist[2]["A_status"] != "error": # Does not plot if there is an error.
       atm = cls.tdata[0][cls.tdata[0][x:, 0].argsort()]
       plt.scatter(atm[0][1:], atm[1][1:], color = "red",label = "A_Temp_Mon")
     if cls.mlist[2]["B_status"] != "error":
@@ -133,7 +106,7 @@ class Website:
       plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
     plt.title("Temperature")
     plt.legend(loc="lower right")
-    buffer = io.BytesIO()
+    buffer = io.BytesIO() # Converts image of plot to a string.
     plt.savefig(buffer, format='png')
     buffer.seek(0)
     img64 = base64.b64encode(buffer.read()).decode('utf-8')
@@ -234,16 +207,22 @@ class Website:
         dlist = """Antenna: """ + str(normal["ant"]) + """, Load: """ + str(normal["load"]) + """, Noise: """ + str(normal["noise"]) + """</p>
       """
     if active:
-      imtab = """
+      if cls.cal["VNAO"] == [0] and len(cls.cal) == 1:
+        imtab = """
     <div class="boxes" id="s11">
-      <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="90%">
+      <p>No VNA data yet!</p>
+    </div>
+      """
+      else:
+        imtab = """
+    <div class="boxes" id="s11">
+      <img src="data:image/png;base64,""" + cls.seefile(cls.data, cls.cal) + """" width="90%">
       <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
     </div>
       """
       # stab = "" <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="90%">
       # sbutton = ""
       # specfunc = ""
-      # specset = "" alt forwardslash
       #  
       stab = """
     <div class="boxes" id="spec">
@@ -280,9 +259,6 @@ class Website:
       specfunc = """
           
       """
-      specset = """
-          image.src = "data:image/png;base64,""" + cls.IMGGGG + """";        
-    """
       sbutton = """
             <button onclick="showhide('spec')">Spectrum</button>
     """
@@ -295,7 +271,6 @@ class Website:
       """
       stab = ""
       specfunc = ""
-      specset = ""
       sbutton = ""
     html = """<!DOCTYPE html>
 <html lang="en">
