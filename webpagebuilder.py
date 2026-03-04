@@ -204,16 +204,7 @@ class Website:
       except KeyError:
         print("No metadata being collected; this is going to cause problems!")
         mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
-      if len(cls.s11data["VNAO"][:][1]) > 1:
-        if len(cls.s11data["rec"][:][1]) > 1:
-          normal = activeflag({"rec": cls.s11data["rec"][1:][1]},
-                   {"VNAO": cls.s11data["VNAO"][1:][1], "VNAS": cls.s11data["VNAS"][1:][1], "VNAL": cls.s11data["VNAL"][1:][1]})
-        else:
-          normal = activeflag({"ant": cls.s11data["ant"][1:][1], "load": cls.s11data["load"][1:][1], "noise": cls.s11data["noise"][1:][1]},
-                   {"VNAO": cls.s11data["VNAO"][1:][1], "VNAS": cls.s11data["VNAS"][1:][1], "VNAL": cls.s11data["VNAL"][1:][1]})
-      else:
-        normal = activeflag({"rec": cls.s11data["rec"][:][1]},
-                   {"VNAO": cls.s11data["VNAO"][:][1], "VNAS": cls.s11data["VNAS"][:][1], "VNAL": cls.s11data["VNAL"][:][1]})
+      normal = activeflag(cls.data, cls.cal)
     else:
       tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
                               [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
