@@ -12,6 +12,7 @@ import time
 import webbrowser
 import subprocess
 import threading
+from datetime import datetime
 
 class Website: 
   flag = True
@@ -89,12 +90,14 @@ class Website:
     while cls.flag:
       # global tdata
       # global s11data
-      # global r
+      # global r datetime.fromtimestamp(
       meta = cls.r.get_live_metadata()
       tem = meta["temp_mon"]
       tec = meta["tempctrl"]
-      cls.tdata = np.append(cls.tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
-                        [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
+      cls.tdata = np.append(cls.tdata, [[[datetime.fromtimestamp(tem["A_timestamp"])], [tem["A_temp"]]], 
+                                        [[datetime.fromtimestamp(tem["B_timestamp"])], [tem["B_temp"]]],
+                                        [[datetime.fromtimestamp(tec["A_timestamp"])], [tec["A_T_now"]]], 
+                                        [[datetime.fromtimestamp(tec["B_timestamp"])], [tec["B_T_now"]]]], axis = 2)
       # ddict = MAGICALGRABBINGFUNCTION()
       #for key in s11data:
       #   if key in ddict:
