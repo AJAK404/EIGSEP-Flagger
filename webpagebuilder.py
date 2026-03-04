@@ -21,8 +21,8 @@ class Website:
   #r= EigsepRedis(host="192.168.10.83")
   readspec = []
   tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
-  data = {"VNAO": [0], "VNAS": [0], "VNAL": [0], "ant": [0], "load": [0], "rec": [0]}
-  cal = {}
+  data = {"ant": [0], "load": [0], "noise": [0], "rec": [0]}
+  cal = {"VNAO": [0], "VNAS": [0], "VNAL": [0]}
   opene = False
   IMGGGG = "uhhhhhhhhhh"
   mlist = [[0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}]
@@ -81,9 +81,10 @@ class Website:
     return img64
 
   def grabs11():
-    d, c, h, m = cls.r.read_vna_data()
-    cls.data = d
-    cls.cal = c
+    while cls.flag:
+      d, c, h, m = cls.r.read_vna_data()
+      cls.data = d
+      cls.cal = c
   
   @classmethod
   def grabbit(cls):
