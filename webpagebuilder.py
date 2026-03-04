@@ -28,6 +28,7 @@ class Website:
   mlist = [[0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}]
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]
   specgraphs = {}
+  kimgs = {"0": "", "02": "", "04": "", "1": "", "13": "": "15": "", "2": "", "24": "", "3": "", "35": "", "4": "", "5": "", "all": ""}
   running = "1"
   spec={"0": np.array([0]), "02": np.array([0]), "04": np.array([0]), "1": np.array([0]), "13": np.array([0]), "15": np.array([0]), "2": np.array([0]), "24": np.array([0]), "3": np.array([0]), "35": np.array([0]), "4": np.array([0]), "5": np.array([0])}
   
@@ -123,7 +124,7 @@ class Website:
     return img64
   
   @classmethod
-  def seespec(cls):
+  def seespec(cls, Chaos=False):
     print(cls.spec["0"])
     plt.figure()
     for k in ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]:
@@ -135,7 +136,24 @@ class Website:
     buffer.seek(0)
     img64 = base64.b64encode(buffer.read()).decode('utf-8')
     plt.close()
-    return img64
+    if Chaos:
+      cls.kimgs[all] = img64
+    else:
+      return img64
+
+  @classmethod
+  def secspec(cls, k):
+    print(cls.spec["0"])
+    plt.figure()
+    plt.plot(np.log10(np.abs(cls.spec[k][0])), label=k)
+    plt.title("Spectra" + k)
+    plt.legend()
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    img64 = base64.b64encode(buffer.read()).decode('utf-8')
+    plt.close()
+    cls.kimgs[k] = img64
 
   @classmethod
   def seespectrum(cls, ks):
@@ -221,35 +239,38 @@ class Website:
       # sbutton = ""
       # specfunc = ""
       # specset = "" alt forwardslash
+      #  <img id="gall" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="90%"> 
       stab = """
     <div class="boxes" id="spec">
     """ + """
-      <img id="g5" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="90%">  
+      <button onclick="showhide('gall')">All</button>
+      <button onclick="showhide('g0')">0</button>
+      <button onclick="showhide('g02')">02</button>
+      <button onclick="showhide('g04')">04</button>
+      <button onclick="showhide('g1')">1</button>
+      <button onclick="showhide('g13')">13</button>
+      <button onclick="showhide('g15')">15</button>
+      <button onclick="showhide('g2')">2</button>
+      <button onclick="showhide('g24')">24</button>
+      <button onclick="showhide('g3')">3</button>
+      <button onclick="showhide('g35')">35</button>
+      <button onclick="showhide('g4')">4</button>
+      <button onclick="showhide('g5')">5</button>
+      <img id="gall" class="gs" display="block" src="data:image/png;base64,""" + kimgs["all"] + """" width="90%">
+      <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + kimgs["0"] + """" width="90%"> 
+      <img id="g02" class="gs" display="none" src="data:image/png;base64,""" + kimgs["02"] + """" width="90%"> 
+      <img id="g04" class="gs" display="none" src="data:image/png;base64,""" + kimgs["04"] + """" width="90%"> 
+      <img id="g1" class="gs" display="none" src="data:image/png;base64,""" + kimgs["1"] + """" width="90%">
+      <img id="g13" class="gs" display="none" src="data:image/png;base64,""" + kimgs["13"] + """" width="90%"> 
+      <img id="g15" class="gs" display="none" src="data:image/png;base64,""" + kimgs["15"] + """" width="90%"> 
+      <img id="g2" class="gs" display="none" src="data:image/png;base64,""" + kimgs["2"] + """" width="90%"> 
+      <img id="g24" class="gs" display="none" src="data:image/png;base64,""" + kimgs["24"] + """" width="90%">  
+      <img id="g3" class="gs" display="none" src="data:image/png;base64,""" + kimgs["3"] + """" width="90%">  
+      <img id="g35" class="gs" display="none" src="data:image/png;base64,""" + kimgs["35"] + """" width="90%">  
+      <img id="g4" class="gs" display="none" src="data:image/png;base64,""" + kimgs["4"] + """" width="90%">
+      <img id="g5" class="gs" display="none" src="data:image/png;base64,""" + kimgs["5"] + """" width="90%">
     </div>
     """
-    # <button onclick="showhide('g0')">0</button>
-      # <button onclick="showhide('g02')">02</button>
-      # <button onclick="showhide('g04')">04</button>
-      # <button onclick="showhide('g1')">1</button>
-      # <button onclick="showhide('g13')">13</button>
-      # <button onclick="showhide('g15')">15</button>
-      # <button onclick="showhide('g2')">2</button>
-      # <button onclick="showhide('g24')">24</button>
-      # <button onclick="showhide('g3')">3</button>
-      # <button onclick="showhide('g35')">35</button>
-      # <button onclick="showhide('g4')">4</button>
-      # <button onclick="showhide('g5')">5</button>
-      # <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("0") + """" width="90%"> 
-      # <img id="g02" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("02") + """" width="400" height="300"> 
-      # <img id="g04" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("04") + """" width="400" height="300"> 
-      # <img id="g1" class="gs" display="block" src="data:image/png;base64,""" + Website.seespec("1") + """" width="400" height="300">
-      # <img id="g13" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("13") + """" width="400" height="300"> 
-      # <img id="g15" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("15") + """" width="400" height="300"> 
-      # <img id="g2" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("2") + """" width="400" height="300"> 
-      # <img id="g24" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("24") + """" width="400" height="300">  
-      # <img id="g3" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("3") + """" width="400" height="300">  
-      # <img id="g35" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("35") + """" width="400" height="300">  
-      # <img id="g4" class="gs" display="none" src="data:image/png;base64,""" + Website.seespec("4") + """" width="400" height="300">
       specfunc = """
           
       """
@@ -279,6 +300,9 @@ class Website:
       	color: lightgray;
         font-family: mono;
       	}
+        .gs {
+          display: none;
+        }
         .buttons {
           display: flex;
           justify-content: center;
@@ -338,6 +362,15 @@ class Website:
               boxes[i].style.display = "block";
             } else if (btheme === "off") {
               boxes[i].style.display = "none";
+            }
+          }
+          for (var i = 0; i < gs.length; i++) {
+            var thing = gs[i].id;
+            var gtheme = localStorage.getItem(thing.concat("sh"));
+            if (gtheme === "on") {
+              gs[i].style.display = "block";
+            } else if (gtheme === "off") {
+              gs[i].style.display = "none";
             }
           }
         }
@@ -452,6 +485,14 @@ methread = threading.Thread(target=w.grabbit, args=(), daemon=True)
 spthread.start()
 methread.start()
 x=0
+print("Do you want the Chaos? (Type N for no.)")
+y = input()
+if y != "N" and y != "n":
+  THREADS = {"all": threading.Thread(target=w.seespec, args=(True,), daemon=True)}
+  for k in w.ks:
+    THREADS[k] = threading.Thread(target=w.secspec, args=(k,), daemon=True)
+  for k in THREADS:
+    THREADS[k].start()
 while True:
     try:
       w.buildpage(active=True)
