@@ -438,7 +438,7 @@ class Website:
         <li>Position: """ + str(mot["el_pos"]) + """</li>
       </div>
       <p>Lidar Distance: """ + str(lid["distance_m"]) + """ meters</p>
-      <p>Switch State: """ + str(bin(rfs["sw_state"]))[::-1] + """</p>
+      <p>Switch State: """ + str(bin(rfs["sw_state"])[2:])[::-1] + """</p>
     </div>
     </div>
 </body>
