@@ -81,7 +81,7 @@ class Website:
     return img64
 
   def grabs11():
-    d, c, h, m = cls.read_vna_data()
+    d, c, h, m = cls.r.read_vna_data()
     cls.data = d
     cls.cal = c
   
