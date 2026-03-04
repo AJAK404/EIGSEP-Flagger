@@ -20,7 +20,7 @@ class Website:
   #r= EigsepRedis(host="192.168.10.83")
   readspec = []
   tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]])
-  data = {}
+  data = {"VNAO": [0], "VNAS": [0], "VNAL": [0], "ant": [0], "load": [0], "rec": [0]}
   cal = {}
   opene = False
   IMGGGG = "uhhhhhhhhhh"
