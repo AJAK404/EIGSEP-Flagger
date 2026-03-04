@@ -475,7 +475,7 @@ class Website:
 w = Website()
 spthread = threading.Thread(target=w.seespectrum, args=(Website.ks,), daemon=True)
 methread = threading.Thread(target=w.grabbit, args=(), daemon=True)
-methread = threading.Thread(target=w.grabs11, args=(), daemon=True)
+s11thread = threading.Thread(target=w.grabs11, args=(), daemon=True)
 spthread.start()
 methread.start()
 s11thread.start()
