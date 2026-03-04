@@ -240,7 +240,7 @@ class Website:
       stab = """
     <div class="boxes" id="spec">
     """ + """
-      <img id="gall" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="90%"> 
+      <img id="g" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="90%"> 
     </div>
     """
       # <button onclick="showhide('gall')">All</button>
@@ -298,9 +298,6 @@ class Website:
       	color: lightgray;
         font-family: mono;
       	}
-        .gs {
-          display: none;
-        }
         .buttons {
           display: flex;
           justify-content: center;
@@ -360,15 +357,6 @@ class Website:
               boxes[i].style.display = "block";
             } else if (btheme === "off") {
               boxes[i].style.display = "none";
-            }
-          }
-          for (var i = 0; i < gs.length; i++) {
-            var thing = gs[i].id;
-            var gtheme = localStorage.getItem(thing.concat("sh"));
-            if (gtheme === "on") {
-              gs[i].style.display = "block";
-            } else if (gtheme === "off") {
-              gs[i].style.display = "none";
             }
           }
         }
