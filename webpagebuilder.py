@@ -124,13 +124,13 @@ class Website:
     return img64
   
   @classmethod
-  def seespec(cls, Chaos=False):
+  def seespec(cls):
     #print(cls.spec["0"])
     plt.figure()
     for k in ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]:
       plt.plot(np.log10(np.abs(cls.spec[k][0])), label=k)
     plt.title("Spectra")
-    plt.legend()
+    plt.legend(loc="upper left")
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
     buffer.seek(0)
@@ -414,12 +414,13 @@ class Website:
     </div>
     <div class="notebook">
     """ + stab + """
+    """ + imtab + """
+    </div>
+    <div class="notebook">
     <div class="boxes" id="temps">
       """ + tgraph + """
       """ + terror + """
     </div>
-    </div>
-    <div class="notebook">
     <div class="boxes" id="tool">
       <h4 style="text-align: center">Motor</h4>
       <div class="mon">
@@ -431,7 +432,6 @@ class Website:
       <p>Lidar Distance: """ + str(lid["distance_m"]) + """ meters</p>
       <p>Switch State: """ + str(bin(rfs["sw_state"]))[::-1] + """</p>
     </div>
-    """ + imtab + """
     </div>
 </body>
 </html>"""
