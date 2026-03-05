@@ -122,13 +122,14 @@ class Website:
   @classmethod
   def seespec(cls):
     plt.figure()
-    print(len(cls.freqs))
-    print(len(np.log10(np.abs(cls.spec["1"][0]))))
+    #print(len(cls.freqs))
+    #print(len(np.log10(np.abs(cls.spec["1"][0]))))
     for k in ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]:
       if len(cls.freqs) == len(np.log10(np.abs(cls.spec[k][0]))):
         plt.plot(cls.freqs, np.log10(np.abs(cls.spec[k][0])), label=k)
     plt.title("Spectra")
     plt.legend(loc="upper left")
+    plt.tight_layout()
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
     buffer.seek(0)
