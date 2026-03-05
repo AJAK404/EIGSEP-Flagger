@@ -13,6 +13,7 @@ import webbrowser
 import subprocess
 import threading
 from datetime import datetime
+from eigsep_corr.utils import calc_times, calc_freqs_dfreq
 
 class Website: 
   flag = True # Tells functions running on a loop to stop when flag is false.
@@ -33,6 +34,7 @@ class Website:
   spec={"0": np.array([0]), "02": np.array([0]), "04": np.array([0]), "1": np.array([0]), "13": np.array([0]), "15": np.array([0]), 
         "2": np.array([0]), "24": np.array([0]), "3": np.array([0]), "35": np.array([0]), "4": np.array([0]), "5": np.array([0])}
   # Contains graphable spectrum data; this empty placeholder avoids keyerrors.
+  freqs = []
   
   @classmethod
   def lin(cls, x): # Linearizes the datapoints in x.
@@ -107,6 +109,7 @@ class Website:
     if cls.mlist[3]["B_status"] != "error":
       btc = cls.tdata[3][cls.tdata[3][x:, 0].argsort()]
       plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
+    plt.xticks(rotation=90)
     plt.title("Temperature")
     plt.legend(loc="lower right")
     buffer = io.BytesIO() # Converts image of plot to a string.
@@ -118,10 +121,9 @@ class Website:
   
   @classmethod
   def seespec(cls):
-    #print(cls.spec["0"])
     plt.figure()
     for k in ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]:
-      plt.plot(np.log10(np.abs(cls.spec[k][0])), label=k)
+      plt.plot(cls.freqs, np.log10(np.abs(cls.spec[k][0])), label=k)
     plt.title("Spectra")
     plt.legend(loc="upper left")
     buffer = io.BytesIO()
@@ -131,25 +133,14 @@ class Website:
     plt.close()
     return img64
 
-  # @classmethod
-  # def secspec(cls, k):
-  #   print(cls.spec["0"])
-  #   plt.figure()
-  #   plt.plot(np.log10(np.abs(cls.spec[k][0])), label=k)
-  #   plt.title("Spectra" + k)
-  #   plt.legend()
-  #   buffer = io.BytesIO()
-  #   plt.savefig(buffer, format='png')
-  #   buffer.seek(0)
-  #   img64 = base64.b64encode(buffer.read()).decode('utf-8')
-  #   plt.close()
-  #   cls.kimgs[k] = img64
 
   @classmethod
   def seespectrum(cls, ks):
     while cls.flag:
       # global IMGGGG
       cls.readspec = cls.r2.read_corr_data(timeout = 3)
+      header = r2.get_corr_header()
+      cls.freqs, dfreq = calc_freqs_dfreq(header["sample_rate"], header["nchan"])
       cls.spec = eo.io.reshape_data(cls.readspec[2])
   
   def ripper(fname):
