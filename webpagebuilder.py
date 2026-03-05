@@ -122,8 +122,8 @@ class Website:
   @classmethod
   def seespec(cls):
     plt.figure()
-    print(cls.freqs.shape)
-    print(np.log10(np.abs(cls.spec["1"][0]).shape))
+    print(len(cls.freqs))
+    print(len(np.log10(np.abs(cls.spec["1"][0]))))
     for k in ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]:
       if len(cls.freqs) == len(np.log10(np.abs(cls.spec[k][0]))):
         plt.plot(cls.freqs, np.log10(np.abs(cls.spec[k][0])), label=k)
