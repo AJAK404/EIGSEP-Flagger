@@ -34,22 +34,24 @@ class Website:
         "2": np.array([0]), "24": np.array([0]), "3": np.array([0]), "35": np.array([0]), "4": np.array([0]), "5": np.array([0])}
   # Contains graphable spectrum data; this empty placeholder avoids keyerrors.
   
-  def lin(x): # Linearizes the datapoints in x.
+  @classmethod
+  def lin(cls, x): # Linearizes the datapoints in x.
     return 20* np.log10(np.abs(x))
-  
-  def seefile(data, cal): # Plots the S11 data.
+
+  @classmethod
+  def seefile(cls, data, cal): # Plots the S11 data.
     plt.figure()
     colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
               "ant": "green", "load": "blue", "noise": "purple",
               "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
     for yap in colors: # Goes through each key in data.
       if yap[:3] == "VNA": # If the key begins with VNA, it is in cal, and should be taken as such.
-        plt.plot(lin(cal[yap]), color = colors[yap],label = yap)
+        plt.plot(cls.lin(cal[yap]), color = colors[yap],label = yap)
       else: # Otherwise, it is in data.
         if len(data) == 1 and yap == "rec": # If it is rec, and data contains rec, plot it.
-          plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+          plt.plot(cls.lin(data[yap]), color = colors[yap],label = yap)
         elif len(data) == 3 and yap != "rec": # If it is not rec, and the data does not contain rec, plot it.
-          plt.plot(lin(data[yap]), color = colors[yap],label = yap)
+          plt.plot(cls.lin(data[yap]), color = colors[yap],label = yap)
     plt.title("S11")
     plt.legend()
     buffer = io.BytesIO() # All the following converts the image of the plot to a string.
@@ -59,7 +61,8 @@ class Website:
     plt.close()
     return img64 # Returns the image as a string.
 
-  def grabs11(): # Grabs S11 data on the S11 thread.
+  @classmethod
+  def grabs11(cls): # Grabs S11 data on the S11 thread.
     while cls.flag: # Stops when the program ends.
       d, c, h, m = cls.r.read_vna_data() # Gets data, cal, header, and metadata.
       cls.data = d
