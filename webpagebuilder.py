@@ -139,7 +139,7 @@ class Website:
     while cls.flag:
       # global IMGGGG
       cls.readspec = cls.r2.read_corr_data(timeout = 3)
-      header = r2.get_corr_header()
+      header = cls.r2.get_corr_header()
       cls.freqs, dfreq = calc_freqs_dfreq(header["sample_rate"], header["nchan"])
       cls.spec = eo.io.reshape_data(cls.readspec[2])
   
