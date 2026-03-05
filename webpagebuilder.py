@@ -113,8 +113,8 @@ class Website:
     if cls.mlist[3]["B_status"] != "error":
       btc = cls.tdata[3][cls.tdata[3][x:, 0].argsort()]
       plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
-    plt.gca.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
-    plt.gca.xaxis.set_minor_formatter(mdates.DateFormatter("%H:%M:%S"))
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
+    plt.gca().xaxis.set_minor_formatter(mdates.DateFormatter("%H:%M:%S"))
     plt.xticks(rotation=90)
     plt.xlabel("Time")
     plt.ylabel("Temperature (C)")
