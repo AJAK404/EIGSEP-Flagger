@@ -42,7 +42,7 @@ class Website:
 
   @classmethod
   def seefile(cls, data, cal): # Plots the S11 data.
-    plt.figure()
+    plt.figure(figsize=(6.4,3.5))
     colors = {"VNAO": "red", "VNAS": "orange", "VNAL": "yellow",
               "ant": "green", "load": "blue", "noise": "purple",
               "rec": "gray"} # Yes, it IS completely necessary to have a different color for each one!
@@ -55,7 +55,11 @@ class Website:
         elif len(data) == 3 and yap != "rec": # If it is not rec, and the data does not contain rec, plot it.
           plt.plot(cls.lin(data[yap]), color = colors[yap],label = yap)
     plt.title("S11")
+    plt.tight_layout()
+    plt.xlabel("Frequency (MHz)")
+    plt.ylabel("|S11| (dB)")
     plt.legend()
+    plt.tight_layout()
     buffer = io.BytesIO() # All the following converts the image of the plot to a string.
     plt.savefig(buffer, format='png')
     buffer.seek(0)
@@ -96,7 +100,7 @@ class Website:
       x = len(cls.tdata) - 1200
     else: # If 1200 temperatures do not exist, graphs what is there.
       x = 0
-    plt.figure()
+    plt.figure(figsize=(6.4,3.5))
     if cls.mlist[2]["A_status"] != "error": # Does not plot if there is an error.
       atm = cls.tdata[0][cls.tdata[0][x:, 0].argsort()]
       plt.scatter(atm[0][1:], atm[1][1:], color = "red",label = "A_Temp_Mon")
@@ -110,7 +114,10 @@ class Website:
       btc = cls.tdata[3][cls.tdata[3][x:, 0].argsort()]
       plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
     plt.xticks(rotation=90)
+    plt.xlabel("Time")
+    plt.ylabel("Temperature (C)")
     plt.title("Temperature")
+    plt.tight_layout()
     plt.legend(loc="lower right")
     buffer = io.BytesIO() # Converts image of plot to a string.
     plt.savefig(buffer, format='png')
@@ -121,7 +128,7 @@ class Website:
   
   @classmethod
   def seespec(cls):
-    plt.figure()
+    plt.figure(figsize=(6.4,3.5))
     #print(len(cls.freqs))
     #print(len(np.log10(np.abs(cls.spec["1"][0]))))
     for k in ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"]:
@@ -129,6 +136,8 @@ class Website:
         plt.plot(cls.freqs, np.log10(np.abs(cls.spec[k][0])), label=k)
     plt.title("Spectra")
     plt.legend(loc="upper left")
+    plt.xlabel("Frequency (MHz)")
+    plt.ylabel("Power (log(counts))")
     plt.tight_layout()
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
@@ -136,7 +145,6 @@ class Website:
     img64 = base64.b64encode(buffer.read()).decode('utf-8')
     plt.close()
     return img64
-
 
   @classmethod
   def seespectrum(cls, ks):
