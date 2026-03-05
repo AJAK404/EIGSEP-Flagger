@@ -121,7 +121,7 @@ class Website:
     plt.ylabel("Temperature (C)")
     plt.title("Temperature")
     plt.tight_layout()
-    plt.legend(loc="lower right")
+    plt.legend(loc="lower left")
     buffer = io.BytesIO() # Converts image of plot to a string.
     plt.savefig(buffer, format='png')
     buffer.seek(0)
