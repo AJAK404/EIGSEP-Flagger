@@ -80,10 +80,10 @@ class Website:
       meta = cls.r.get_live_metadata()
       tem = meta["temp_mon"]
       tec = meta["tempctrl"]
-      cls.tdata = np.append(cls.tdata, [[[datetime.fromtimestamp(tem["A_timestamp"]).strftime("%H:%M:%S")], [tem["A_temp"]]], 
-                                        [[datetime.fromtimestamp(tem["B_timestamp"]).strftime("%H:%M:%S")], [tem["B_temp"]]],
-                                        [[datetime.fromtimestamp(tec["A_timestamp"]).strftime("%H:%M:%S")], [tec["A_T_now"]]], 
-                                        [[datetime.fromtimestamp(tec["B_timestamp"]).strftime("%H:%M:%S")], [tec["B_T_now"]]]], axis = 2)
+      cls.tdata = np.append(cls.tdata, [[[datetime.fromtimestamp(tem["A_timestamp"])], [tem["A_temp"]]], 
+                                        [[datetime.fromtimestamp(tem["B_timestamp"])], [tem["B_temp"]]],
+                                        [[datetime.fromtimestamp(tec["A_timestamp"])], [tec["A_T_now"]]], 
+                                        [[datetime.fromtimestamp(tec["B_timestamp"])], [tec["B_T_now"]]]], axis = 2)
       # Adds a datapoint of format (datetime, temperature) to the temperature array.
       cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
       time.sleep(.1) # Limits rate of metadata grabbing.
@@ -113,6 +113,8 @@ class Website:
     if cls.mlist[3]["B_status"] != "error":
       btc = cls.tdata[3][cls.tdata[3][x:, 0].argsort()]
       plt.scatter(btc[0][1:], btc[1][1:], color = "blue",label = "B_Temp_Ctrl")
+    plt.gca.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
+    plt.gca.xaxis.set_minor_formatter(mdates.DateFormatter("%H:%M:%S"))
     plt.xticks(rotation=90)
     plt.xlabel("Time")
     plt.ylabel("Temperature (C)")
