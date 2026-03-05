@@ -34,7 +34,7 @@ class Website:
   spec={"0": np.array([0]), "02": np.array([0]), "04": np.array([0]), "1": np.array([0]), "13": np.array([0]), "15": np.array([0]), 
         "2": np.array([0]), "24": np.array([0]), "3": np.array([0]), "35": np.array([0]), "4": np.array([0]), "5": np.array([0])}
   # Contains graphable spectrum data; this empty placeholder avoids keyerrors.
-  freqs = []
+  freqs = [0]
   
   @classmethod
   def lin(cls, x): # Linearizes the datapoints in x.
