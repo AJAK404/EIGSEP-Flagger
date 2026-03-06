@@ -36,6 +36,7 @@ class Website:
         "2": np.array([[0]]), "24": np.array([[0]]), "3": np.array([[0]]), "35": np.array([[0]]), "4": np.array([[0]]), "5": np.array([[0]])}
   # Contains graphable spectrum data; this empty placeholder avoids keyerrors.
   freqs = [0]
+  s11time = -10000000000
   
   @classmethod
   def lin(cls, x): # Linearizes the datapoints in x.
@@ -74,6 +75,7 @@ class Website:
       d, c, h, m = cls.r.read_vna_data() # Gets data, cal, header, and metadata.
       cls.data = d
       cls.cal = c
+      cls.s11time = datetime.fromtimestamp(m["temp_mon"]["A_timestamp"])
   
   @classmethod
   def grabbit(cls): # Grabs metadata on the metadata thread.
@@ -170,6 +172,59 @@ class Website:
       except:
         return fn
     return fn
+
+  def good(a):
+    if a:
+      return "Normal"
+    else:
+      return "Abnormal"
+
+  @classmethod
+  def specflag(cls, klims):
+    # klims = {"k": [lowerave, upperave, cause=False, mindip, maxpeak]} 
+    # Also get s11 timestamp, image of telescope, and big switchstate.
+    flags = {}
+    c = ""
+    for k in cls.ks:
+      good = True
+      ave = np.mean(np.log10(np.abs(cls.spec[k][0])))
+      if klims[k][0] > ave:
+        good = False
+        c = k + " is too low." 
+      elif klims[k][1] < ave:
+        good = False
+        c = k + " is too high." 
+      if klims[2]:
+        for i in np.log10(np.abs(cls.spec[k][0])):
+          if i < klims[k][3]:
+            good = False
+            c = k + " dips below " + str(klims[k][2]) 
+          elif klims[k][4] < i:
+            good = False
+            c = k + " peaks above " + str(klims[k][3]) 
+      if klims[2]:
+        flags[k] = [good, c]
+      else:
+        flags[k] = [good, "x"]
+    return flags
+    
+  @classmethod
+  def tempflag(cls, pvals=[], seconds=10):
+    # pvals = [amon, bmon, actrl, bctrl]
+    probs = [[False, False], [False, False], [False, False], [False, False]]
+    labs = [[2,"A_status"], [2,"B_status"], [3,"A_status"], [3,"B_status"]]
+    for i in range(4):
+      if cls.mlist[labs[i][0]][labs[i][1]] != "error":
+        if cls.tdata[i][1][-1] > pval[i]:
+          probs[i][0] = True
+        if not probs[i][0]:
+          if len(cls.tdata) > 300: 
+            x = len(cls.tdata) - 300
+          else: 
+            x = 0
+          if np.mean(cls.tdata[i][1][x:-1]) > pvals[i]:
+            probs[i][1] = True
+    return probs
   
   @classmethod
   def buildpage(cls, meta={}, data={}, cal={}, spec = {}, fname="", active=False, path="."):
@@ -198,7 +253,19 @@ class Website:
       <img src="data:image/png;base64,""" + cls.seetemp() + """" width="90%">
       """
     terror = """"""
+    s = 10
+    probs = tempflag(seconds=s)
+    labs = ["A-monitoring", "B-monitoring", "A-control", "B-control"]
     if True:
+      for i in range(4):
+        if probs[i][0]:
+          terror += """
+        <p>WARNING: """ + labs + """ is actively overheating!!!</p>
+           """
+        elif probs[i][1]:
+          terror += """
+        <p>Notice: """ + labs + """ approached high temperatures in the last """ + str(s) + """ seconds.</p>
+           """
       for boo in ["A_status", "B_status"]:
         if tem[boo] == "error":
           terror += """
@@ -210,61 +277,47 @@ class Website:
             """
     if True:
       if len(normal) == 2:
-        dlist = """Recording: """ + str(normal["rec"]) + """</p>
+        dlist = """Recording: """ + good(normal["rec"]) + """</p>
       """
       else:
-        dlist = """Antenna: """ + str(normal["ant"]) + """, Load: """ + str(normal["load"]) + """, Noise: """ + str(normal["noise"]) + """</p>
+        dlist = """Antenna: """ + good(normal["ant"]) + """, Load: """ + good(normal["load"]) + """, Noise: """ + good(normal["noise"]) + """</p>
       """
     if active:
       if cls.cal["VNAO"] == [0] and len(cls.cal) == 1:
         imtab = """
     <div class="boxes" id="s11">
-      <p>No VNA data yet!</p>
+      <p>No S11 data yet!</p>
     </div>
       """
       else:
         imtab = """
     <div class="boxes" id="s11">
       <img src="data:image/png;base64,""" + cls.seefile(cls.data, cls.cal) + """" width="90%">
-      <p>Calibration: """ + str(normal["cal"]) + """, """ + dlist + """
+      <p>Calibration: """ + good(normal["cal"]) + """, """ + dlist + """
+      <p>S11 data last taken at """ + str(cls.s11time) + """.</p>
     </div>
       """
       # stab = "" <img src="data:image/png;base64,""" + cls.seeactives11() + """" width="90%">
       # sbutton = ""
       # specfunc = ""
       #  
+      swarning = """"""
+      normie = specflag({"k": [lowerave, upperave, cause=False, mindip, maxpeak]})
+      for k in cls.ks:
+        if normie[k][1] != "":
+          swarning += """
+      <p>""" + normie[k][1] + """</p>
+          """
+        elif not normie[k][0]:
+          swarning += """
+      <p>""" + k + """ is abnormal.</p>
+          """
       stab = """
     <div class="boxes" id="spec">
-    """ + """
-      <img id="g" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="90%"> 
+    <img id="g" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="90%">
+    """ + swarning + """
     </div>
     """
-      # <button onclick="showhide('gall')">All</button>
-      # <button onclick="showhide('g0')">0</button>
-      # <button onclick="showhide('g02')">02</button>
-      # <button onclick="showhide('g04')">04</button>
-      # <button onclick="showhide('g1')">1</button>
-      # <button onclick="showhide('g13')">13</button>
-      # <button onclick="showhide('g15')">15</button>
-      # <button onclick="showhide('g2')">2</button>
-      # <button onclick="showhide('g24')">24</button>
-      # <button onclick="showhide('g3')">3</button>
-      # <button onclick="showhide('g35')">35</button>
-      # <button onclick="showhide('g4')">4</button>
-      # <button onclick="showhide('g5')">5</button>
-      # <img id="gall" class="gs" display="block" src="data:image/png;base64,""" + kimgs["all"] + """" width="90%">
-      # <img id="g0" class="gs" display="none" src="data:image/png;base64,""" + kimgs["0"] + """" width="90%"> 
-      # <img id="g02" class="gs" display="none" src="data:image/png;base64,""" + kimgs["02"] + """" width="90%"> 
-      # <img id="g04" class="gs" display="none" src="data:image/png;base64,""" + kimgs["04"] + """" width="90%"> 
-      # <img id="g1" class="gs" display="none" src="data:image/png;base64,""" + kimgs["1"] + """" width="90%">
-      # <img id="g13" class="gs" display="none" src="data:image/png;base64,""" + kimgs["13"] + """" width="90%"> 
-      # <img id="g15" class="gs" display="none" src="data:image/png;base64,""" + kimgs["15"] + """" width="90%"> 
-      # <img id="g2" class="gs" display="none" src="data:image/png;base64,""" + kimgs["2"] + """" width="90%"> 
-      # <img id="g24" class="gs" display="none" src="data:image/png;base64,""" + kimgs["24"] + """" width="90%">  
-      # <img id="g3" class="gs" display="none" src="data:image/png;base64,""" + kimgs["3"] + """" width="90%">  
-      # <img id="g35" class="gs" display="none" src="data:image/png;base64,""" + kimgs["35"] + """" width="90%">  
-      # <img id="g4" class="gs" display="none" src="data:image/png;base64,""" + kimgs["4"] + """" width="90%">
-      # <img id="g5" class="gs" display="none" src="data:image/png;base64,""" + kimgs["5"] + """" width="90%">
       specfunc = """
           
       """
@@ -403,6 +456,7 @@ class Website:
             <br>
             <button onclick="lightswitch()">Light Switch</button>
         </div>
+        <h2>Switch State: """ + str(bin(rfs["sw_state"])[2:])[::-1] + """</h2>
     </div>
     <div class="notebook">
     """ + stab + """
@@ -422,7 +476,6 @@ class Website:
         <li>Position: """ + str(mot["el_pos"]) + """</li>
       </div>
       <p>Lidar Distance: """ + str(lid["distance_m"]) + """ meters</p>
-      <p>Switch State: """ + str(bin(rfs["sw_state"])[2:])[::-1] + """</p>
     </div>
     </div>
 </body>
