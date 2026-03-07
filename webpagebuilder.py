@@ -37,6 +37,23 @@ class Website:
   # Contains graphable spectrum data; this empty placeholder avoids keyerrors.
   freqs = [0]
   s11time = -10000000000
+  path_str = { # /EIGSEP/pico-firmware/picohost/src/picohost/base.py
+        "VNAO": "10000000",  # checked 7/7/25 
+        "VNAS": "11000000",  # checked 7/7/25
+        "VNAL": "00100000",  # checked 7/7/25
+        "VNAANT": "00000001",  # checked 7/7/25
+        "VNANON": "00000111",  # checked 7/7/25
+        "VNANOFF": "00000101",  # checked 7/7/25
+        "VNARF": "00011000",  # checked 7/7/25
+        "RFNON": "00000110",  # checked 7/7/25
+        "RFNOFF": "00000100",  # checked 7/7/25
+        "RFANT": "00000000",  # checked 7/7/25
+    }
+
+  def bin2string(k):
+    for l in path_str:
+      if l == k:
+        return l
   
   @classmethod
   def lin(cls, x): # Linearizes the datapoints in x.
@@ -456,7 +473,7 @@ class Website:
             <br>
             <button onclick="lightswitch()">Light Switch</button>
         </div>
-        <h2>Switch State: """ + str(bin(rfs["sw_state"])[2:])[::-1] + """</h2>
+        <h2>Switch State: """ + bin2string(str(bin(rfs["sw_state"])[2:])[::-1]) + """/""" + str(bin(rfs["sw_state"])[2:])[::-1] + """</h2>
     </div>
     <div class="notebook">
     """ + stab + """
