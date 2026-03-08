@@ -35,8 +35,8 @@ class Website:
   spec={"0": np.array([[0]]), "02": np.array([[0]]), "04": np.array([[0]]), "1": np.array([[0]]), "13": np.array([[0]]), "15": np.array([[0]]), 
         "2": np.array([[0]]), "24": np.array([[0]]), "3": np.array([[0]]), "35": np.array([[0]]), "4": np.array([[0]]), "5": np.array([[0]])}
   # Contains graphable spectrum data; this empty placeholder avoids keyerrors.
-  freqs = [0]
-  s11time = -10000000000
+  freqs = [0] # The spectra frequencies.
+  s11time = -10000000000 # The last time S11 data was taken; this Unix timestamp gives a date in 1643 AD.
   path_str = { # /EIGSEP/pico-firmware/picohost/src/picohost/base.py
         "VNAO": "10000000",  # checked 7/7/25 
         "VNAS": "11000000",  # checked 7/7/25
@@ -49,7 +49,9 @@ class Website:
         "RFNOFF": "00000100",  # checked 7/7/25
         "RFANT": "00000000",  # checked 7/7/25
     }
-
+  s11w = True # Denotes whether S11 data is being collected.
+  metw = True # Denotes whether metadata is being collected.
+  spew = True # Denotes whether spectra data is being collected.
   def bin2string(k):
     for l in path_str:
       if l == k:
@@ -89,25 +91,33 @@ class Website:
   @classmethod
   def grabs11(cls): # Grabs S11 data on the S11 thread.
     while cls.flag: # Stops when the program ends.
-      d, c, h, m = cls.r.read_vna_data() # Gets data, cal, header, and metadata.
-      cls.data = d
-      cls.cal = c
-      cls.s11time = datetime.fromtimestamp(m["temp_mon"]["A_timestamp"])
+      try:
+        d, c, h, m = cls.r.read_vna_data() # Gets data, cal, header, and metadata.
+        cls.data = d
+        cls.cal = c
+        cls.s11time = datetime.fromtimestamp(m["temp_mon"]["A_timestamp"])
+        cls.s11w = True
+      except:
+        cls.s11w = False
   
   @classmethod
   def grabbit(cls): # Grabs metadata on the metadata thread.
     while cls.flag:
-      meta = cls.r.get_live_metadata()
-      tem = meta["temp_mon"]
-      tec = meta["tempctrl"]
-      cls.tdata = np.append(cls.tdata, [[[datetime.fromtimestamp(tem["A_timestamp"])], [tem["A_temp"]]], 
-                                        [[datetime.fromtimestamp(tem["B_timestamp"])], [tem["B_temp"]]],
-                                        [[datetime.fromtimestamp(tec["A_timestamp"])], [tec["A_T_now"]]], 
-                                        [[datetime.fromtimestamp(tec["B_timestamp"])], [tec["B_T_now"]]]], axis = 2)
-      # Adds a datapoint of format (datetime, temperature) to the temperature array.
-      cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
-      time.sleep(.1) # Limits rate of metadata grabbing.
-      #print("Metadata in grabbing thread: \n" + str(cls.mlist))
+      try:
+        meta = cls.r.get_live_metadata()
+        cls.metw = True
+        tem = meta["temp_mon"]
+        tec = meta["tempctrl"]
+        cls.tdata = np.append(cls.tdata, [[[datetime.fromtimestamp(tem["A_timestamp"])], [tem["A_temp"]]], 
+                                          [[datetime.fromtimestamp(tem["B_timestamp"])], [tem["B_temp"]]],
+                                          [[datetime.fromtimestamp(tec["A_timestamp"])], [tec["A_T_now"]]], 
+                                          [[datetime.fromtimestamp(tec["B_timestamp"])], [tec["B_T_now"]]]], axis = 2)
+        # Adds a datapoint of format (datetime, temperature) to the temperature array.
+        cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
+        time.sleep(.1) # Limits rate of metadata grabbing.
+        #print("Metadata in grabbing thread: \n" + str(cls.mlist))
+      except:
+        cls.metw = False
 
   @classmethod
   def grabbe(cls): # Get each part of metadata for the website in a conveinet manner.
@@ -171,11 +181,14 @@ class Website:
   @classmethod
   def seespectrum(cls, ks):
     while cls.flag:
-      # global IMGGGG
-      cls.readspec = cls.r2.read_corr_data(timeout = 3)
-      header = cls.r2.get_corr_header()
-      cls.freqs, dfreq = calc_freqs_dfreq(header["sample_rate"], header["nchan"])
-      cls.spec = eo.io.reshape_data(cls.readspec[2])
+      try:
+        cls.readspec = cls.r2.read_corr_data(timeout = 10)
+        header = cls.r2.get_corr_header()
+        cls.freqs, dfreq = calc_freqs_dfreq(header["sample_rate"], header["nchan"])
+        cls.spec = eo.io.reshape_data(cls.readspec[2])
+        cls.spew = True
+      except:
+        cls.spew = False
   
   def ripper(fname):
     i= -4
@@ -351,6 +364,19 @@ class Website:
       stab = ""
       specfunc = ""
       sbutton = ""
+    collecting = """"""
+    if not cls.spew:
+      collecting += """
+        <p>Warning: Spectra are not being collected!</p>
+      """
+    if not cls.s11w:
+      collecting += """
+        <p>Warning: S11 data is not being collected!</p>
+      """
+    if not cls.metw:
+      collecting += """
+        <p>Warning: Metadata is not being collected!</p>
+      """
     html = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -474,6 +500,7 @@ class Website:
             <button onclick="lightswitch()">Light Switch</button>
         </div>
         <h2>Switch State: """ + bin2string(str(bin(rfs["sw_state"])[2:])[::-1]) + """/""" + str(bin(rfs["sw_state"])[2:])[::-1] + """</h2>
+        """ + collecting + """
     </div>
     <div class="notebook">
     """ + stab + """
