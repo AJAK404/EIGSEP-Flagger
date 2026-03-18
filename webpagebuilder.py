@@ -215,7 +215,7 @@ class Website:
 
   sample = {}
   for i in ks:
-    sample[i] = [0, np.inf, True, 0, np.inf]
+    sample[i] = [0, np.inf, False, 0, np.inf]
     
   @classmethod
   def specflag(cls, klims=sample):
@@ -342,14 +342,15 @@ class Website:
       swarning = """"""
       normie = cls.specflag()
       for k in cls.ks:
-        if normie[k][1] != "":
+        if normie[k][1] != "x":
           swarning += """
       <p>""" + normie[k][1] + """</p>
           """
         elif not normie[k][0]:
           swarning += """
-      <p>""" + k + """ is abnormal.</p>
-          """
+      <p>""" + k + """ is abnormal. """
+      swarning += """</p>
+      """
       stab = """
     <div class="boxes" id="spec">
     <img id="g" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="90%">
