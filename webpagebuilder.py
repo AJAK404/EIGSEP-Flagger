@@ -210,7 +210,7 @@ class Website:
       return "Abnormal"
 
   sample = {}
-  for i in cls.ks:
+  for i in ks:
     sample[i] = [0, np.inf, True, 0, np.inf]
     
   @classmethod
