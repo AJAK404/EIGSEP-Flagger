@@ -327,7 +327,7 @@ class Website:
         imtab = """
     <div class="boxes" id="s11">
       <img src="data:image/png;base64,""" + cls.seefile(cls.data, cls.cal) + """" width="90%">
-      <p>Calibration: """ + good(normal["cal"]) + """, """ + dlist + """
+      <p>Calibration: """ + cls.good(normal["cal"]) + """, """ + dlist + """
       <p>S11 data last taken at """ + str(cls.s11time) + """.</p>
     </div>
       """
