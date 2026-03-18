@@ -339,16 +339,14 @@ class Website:
       # sbutton = ""
       # specfunc = ""
       #  
-      swarning = """"""
+      swarning = """
+      <p>"""
       normie = cls.specflag()
       for k in cls.ks:
         if normie[k][1] != "x":
-          swarning += """
-      <p>""" + normie[k][1] + """</p>
-          """
+          swarning += normie[k][1]
         elif not normie[k][0]:
-          swarning += """
-      <p>""" + k + """ is abnormal. """
+          swarning += k + """ is abnormal. """
       swarning += """</p>
       """
       stab = """
