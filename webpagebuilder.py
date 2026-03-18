@@ -55,8 +55,8 @@ class Website:
 
   @classmethod
   def bin2string(cls, k):
-    for l in path_str:
-      if path_str[l] == k:
+    for l in cls.path_str:
+      if cls.path_str[l] == k:
         return l
     return "idk"
 
