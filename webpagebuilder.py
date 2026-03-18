@@ -508,7 +508,7 @@ class Website:
             <br>
             <button onclick="lightswitch()">Light Switch</button>
         </div>
-        <h2 style="text-align: center;">Switch State: """ + cls.bin2string(str(bin(rfs["sw_state"])[2:])[::-1]) + """/""" + str(bin(rfs["sw_state"])[2:])[::-1] + """</h2>
+        <h2 style="text-align: center;">Switch State: """ + cls.bin2string(str(bin(rfs["sw_state"])[2:]).zfill(8)[::-1]) + """/""" + str(bin(rfs["sw_state"])[2:])[::-1] + """</h2>
         """ + collecting + """
     </div>
     <div class="notebook">
