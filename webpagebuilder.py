@@ -52,10 +52,14 @@ class Website:
   s11w = True # Denotes whether S11 data is being collected.
   metw = True # Denotes whether metadata is being collected.
   spew = True # Denotes whether spectra data is being collected.
-  def bin2string(k):
+
+  @classmethod
+  def bin2string(cls, k):
     for l in path_str:
-      if l == k:
+      if path_str[l] == k:
         return l
+    return "idk"
+
   
   @classmethod
   def lin(cls, x): # Linearizes the datapoints in x.
@@ -95,7 +99,7 @@ class Website:
         d, c, h, m = cls.r.read_vna_data() # Gets data, cal, header, and metadata.
         cls.data = d
         cls.cal = c
-        cls.s11time = datetime.fromtimestamp(m["temp_mon"]["A_timestamp"])
+        cls.s11time = str(datetime.fromtimestamp(m["temp_mon"]["A_timestamp"]))
         cls.s11w = True
       except:
         cls.s11w = False
@@ -232,10 +236,10 @@ class Website:
         for i in np.log10(np.abs(cls.spec[k][0])):
           if i < klims[k][3]:
             good = False
-            c = k + " dips below " + str(klims[k][2]) 
+            c = k + " dips below " + str(klims[k][3]) 
           elif klims[k][4] < i:
             good = False
-            c = k + " peaks above " + str(klims[k][3]) 
+            c = k + " peaks above " + str(klims[k][4]) 
       if klims[k][2]:
         flags[k] = [good, c]
       else:
@@ -503,7 +507,7 @@ class Website:
             <br>
             <button onclick="lightswitch()">Light Switch</button>
         </div>
-        <h2>Switch State: """ + str(bin(rfs["sw_state"])[2:])[::-1] + """/""" + str(bin(rfs["sw_state"])[2:])[::-1] + """</h2>
+        <h2>Switch State: """ + bin2string(str(bin(rfs["sw_state"])[2:])[::-1]) + """/""" + str(bin(rfs["sw_state"])[2:])[::-1] + """</h2>
         """ + collecting + """
     </div>
     <div class="notebook">
