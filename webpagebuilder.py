@@ -288,7 +288,7 @@ class Website:
       """
     terror = """"""
     s = 10
-    probs = tempflag(seconds=s)
+    probs = cls.tempflag(seconds=s)
     labs = ["A-monitoring", "B-monitoring", "A-control", "B-control"]
     if True:
       for i in range(4):
@@ -336,7 +336,7 @@ class Website:
       # specfunc = ""
       #  
       swarning = """"""
-      normie = specflag()
+      normie = cls.specflag()
       for k in cls.ks:
         if normie[k][1] != "":
           swarning += """
