@@ -298,11 +298,11 @@ class Website:
       for i in range(4):
         if probs[i][0]:
           terror += """
-        <p>WARNING: """ + str(labs[i]) + """ is actively overheating!!!</p>
+        <h2 style="color: red;">WARNING: """ + str(labs[i]) + """ is actively overheating!!!</h2>
            """
         elif probs[i][1]:
           terror += """
-        <p>Notice: """ + str(labs[i]) + """ approached high temperatures in the last """ + str(s) + """ seconds.</p>
+        <p style="color: yellow;">Notice: """ + str(labs[i]) + """ approached high temperatures in the last """ + str(s) + """ seconds.</p>
            """
       for boo in ["A_status", "B_status"]:
         if tem[boo] == "error":
