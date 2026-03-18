@@ -336,7 +336,7 @@ class Website:
       # specfunc = ""
       #  
       swarning = """"""
-      normie = specflag({"k": [lowerave, upperave, cause=False, mindip, maxpeak]})
+      normie = specflag()
       for k in cls.ks:
         if normie[k][1] != "":
           swarning += """
