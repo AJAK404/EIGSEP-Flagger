@@ -112,10 +112,14 @@ class Website:
         cls.metw = True
         tem = meta["temp_mon"]
         tec = meta["tempctrl"]
-        cls.tdata = np.append(cls.tdata, [[[datetime.fromtimestamp(tem["A_timestamp"])], [tem["A_temp"]]], 
-                                          [[datetime.fromtimestamp(tem["B_timestamp"])], [tem["B_temp"]]],
-                                          [[datetime.fromtimestamp(tec["A_timestamp"])], [tec["A_T_now"]]], 
-                                          [[datetime.fromtimestamp(tec["B_timestamp"])], [tec["B_T_now"]]]], axis = 2)
+        #cls.tdata = np.append(cls.tdata, [[[datetime.fromtimestamp(tem["A_timestamp"])], [tem["A_temp"]]], 
+        #                                  [[datetime.fromtimestamp(tem["B_timestamp"])], [tem["B_temp"]]],
+        #                                  [[datetime.fromtimestamp(tec["A_timestamp"])], [tec["A_T_now"]]], 
+        #                                  [[datetime.fromtimestamp(tec["B_timestamp"])], [tec["B_T_now"]]]], axis = 2)
+        cls.tdata = np.append(cls.tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], 
+                                          [[tem["B_timestamp"]], [tem["B_temp"]]],
+                                          [[tec["A_timestamp"]], [tec["A_T_now"]]], 
+                                          [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
         # Adds a datapoint of format (datetime, temperature) to the temperature array.
         cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
         time.sleep(.1) # Limits rate of metadata grabbing.
