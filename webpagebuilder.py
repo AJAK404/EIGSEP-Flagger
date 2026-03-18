@@ -214,7 +214,7 @@ class Website:
     sample[i] = [0, np.inf, True, 0, np.inf]
     
   @classmethod
-  def specflag(cls, klims=cls.sample):
+  def specflag(cls, klims=sample):
     # klims = {"k": [lowerave, upperave, cause=False, mindip, maxpeak]} 
     # Also get s11 timestamp, image of telescope, and big switchstate.
     flags = {}
