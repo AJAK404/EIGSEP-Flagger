@@ -311,10 +311,10 @@ class Website:
             """
     if True:
       if len(normal) == 2:
-        dlist = """Recording: """ + good(normal["rec"]) + """</p>
+        dlist = """Recording: """ + cls.good(normal["rec"]) + """</p>
       """
       else:
-        dlist = """Antenna: """ + good(normal["ant"]) + """, Load: """ + good(normal["load"]) + """, Noise: """ + good(normal["noise"]) + """</p>
+        dlist = """Antenna: """ + cls.good(normal["ant"]) + """, Load: """ + cls.good(normal["load"]) + """, Noise: """ + cls.good(normal["noise"]) + """</p>
       """
     if active:
       if cls.cal["VNAO"] == [0] and len(cls.cal) == 1:
