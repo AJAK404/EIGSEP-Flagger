@@ -209,8 +209,12 @@ class Website:
     else:
       return "Abnormal"
 
+  sample = {}
+  for i in cls.ks:
+    sample[i] = [0, np.inf, True, 0, np.inf]
+    
   @classmethod
-  def specflag(cls, klims):
+  def specflag(cls, klims=cls.sample):
     # klims = {"k": [lowerave, upperave, cause=False, mindip, maxpeak]} 
     # Also get s11 timestamp, image of telescope, and big switchstate.
     flags = {}
@@ -239,7 +243,7 @@ class Website:
     return flags
     
   @classmethod
-  def tempflag(cls, pvals=[], seconds=10):
+  def tempflag(cls, pvals=[0, 0, 0, 0], seconds=10):
     # pvals = [amon, bmon, actrl, bctrl]
     probs = [[False, False], [False, False], [False, False], [False, False]]
     labs = [[2,"A_status"], [2,"B_status"], [3,"A_status"], [3,"B_status"]]
