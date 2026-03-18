@@ -228,7 +228,7 @@ class Website:
       elif klims[k][1] < ave:
         good = False
         c = k + " is too high." 
-      if klims[2]:
+      if klims[k][2]:
         for i in np.log10(np.abs(cls.spec[k][0])):
           if i < klims[k][3]:
             good = False
@@ -236,7 +236,7 @@ class Website:
           elif klims[k][4] < i:
             good = False
             c = k + " peaks above " + str(klims[k][3]) 
-      if klims[2]:
+      if klims[k][2]:
         flags[k] = [good, c]
       else:
         flags[k] = [good, "x"]
