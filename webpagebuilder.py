@@ -321,7 +321,7 @@ class Website:
         dlist = """Antenna: """ + cls.good(normal["ant"]) + """, Load: """ + cls.good(normal["load"]) + """, Noise: """ + cls.good(normal["noise"]) + """</p>
       """
     if active:
-      if cls.cal["VNAO"] == [0] and len(cls.cal) == 1:
+      if cls.cal["VNAO"] == [0] and len(cls.cal) == 3:
         imtab = """
     <div class="boxes" id="s11">
       <p>No S11 data yet!</p>
@@ -340,13 +340,15 @@ class Website:
       # specfunc = ""
       #  
       swarning = """
-      <p>"""
+      <p>Bad Spectra: """
       normie = cls.specflag()
       for k in cls.ks:
         if normie[k][1] != "x":
           swarning += normie[k][1]
         elif not normie[k][0]:
-          swarning += k + """ is abnormal. """
+          if swarning[-1] != " ":
+            swarning += ", "
+          swarning += k
       swarning += """</p>
       """
       stab = """
