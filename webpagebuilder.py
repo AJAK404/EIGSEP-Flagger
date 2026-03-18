@@ -243,7 +243,7 @@ class Website:
     return flags
     
   @classmethod
-  def tempflag(cls, pvals=[0, 0, 0, 0], seconds=10):
+  def tempflag(cls, pval=[0, 0, 0, 0], seconds=10):
     # pvals = [amon, bmon, actrl, bctrl]
     probs = [[False, False], [False, False], [False, False], [False, False]]
     labs = [[2,"A_status"], [2,"B_status"], [3,"A_status"], [3,"B_status"]]
