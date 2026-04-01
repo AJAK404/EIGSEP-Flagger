@@ -22,14 +22,14 @@ class Website:
   r = EigsepRedis(host="10.10.10.11") # For metadata and S11 data.
   #r= EigsepRedis(host="192.168.10.83")
   readspec = [] # Contains all spectrum data. 
-  tdata = np.array([[[0],[0]], [[0],[0]], [[0],[0]], [[0],[0]]]) # Contains the points for, in this order,
+  tdata = np.array([[[0],[0]], [[0],[0]]]) # Contains the points for, in this order,
   #the monitored temperature A and B and the control temperature A and B, with time as the first coordinate.
   #This empty placeholder provides a base and is not plotted.
   data = {"ant": [0], "load": [0], "noise": [0], "rec": [0]} # Contains the S11 data; this empty placeholder avouds keyerrors.
   cal = {"VNAO": [0], "VNAS": [0], "VNAL": [0]} # Contains the S11 calibration data; this empty placeholder avoids keyerrors.
   opene = False # Denotes whether the website has been opened or not.
-  mlist = [[0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, 
-           {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, 
+  mlist = [[0], [0], ["xxx"], 
+           {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0, "A_T_target": 0, B_T_target": 0}, {"distance_m": 0}, 
            {"az_pos": 0, "el_pos": 0}, {"sw_state":0}] # Contains metadata; this empty placeholder avoids keyerrors. 
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"] # A list of all possible spectra.
   spec={"0": np.array([[0]]), "02": np.array([[0]]), "04": np.array([[0]]), "1": np.array([[0]]), "13": np.array([[0]]), "15": np.array([[0]]), 
@@ -99,7 +99,7 @@ class Website:
         d, c, h, m = cls.r.read_vna_data() # Gets data, cal, header, and metadata.
         cls.data = d
         cls.cal = c
-        cls.s11time = str(datetime.fromtimestamp(m["temp_mon"]["A_timestamp"]))
+        cls.s11time = str(datetime.fromtimestamp(m["temp_ctrl"]["A_timestamp"]))
         cls.s11w = True
       except:
         cls.s11w = False
@@ -110,18 +110,16 @@ class Website:
       try:
         meta = cls.r.get_live_metadata()
         cls.metw = True
-        tem = meta["temp_mon"]
         tec = meta["tempctrl"]
         #cls.tdata = np.append(cls.tdata, [[[datetime.fromtimestamp(tem["A_timestamp"])], [tem["A_temp"]]], 
         #                                  [[datetime.fromtimestamp(tem["B_timestamp"])], [tem["B_temp"]]],
         #                                  [[datetime.fromtimestamp(tec["A_timestamp"])], [tec["A_T_now"]]], 
         #                                  [[datetime.fromtimestamp(tec["B_timestamp"])], [tec["B_T_now"]]]], axis = 2)
-        cls.tdata = np.append(cls.tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], 
-                                          [[tem["B_timestamp"]], [tem["B_temp"]]],
+        cls.tdata = np.append(cls.tdata, [
                                           [[tec["A_timestamp"]], [tec["A_T_now"]]], 
                                           [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
         # Adds a datapoint of format (datetime, temperature) to the temperature array.
-        cls.mlist = [meta["imu_antenna"], meta["imu_panda"], meta["temp_mon"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
+        cls.mlist = [meta["imu_antenna"], meta["imu_panda"], ["xxx"], meta["tempctrl"], meta["lidar"], meta["motor"], meta["rfswitch"]]
         time.sleep(.1) # Limits rate of metadata grabbing.
         #print("Metadata in grabbing thread: \n" + str(cls.mlist))
       except:
@@ -130,7 +128,7 @@ class Website:
   @classmethod
   def grabbe(cls): # Get each part of metadata for the website in a conveinet manner.
     #print("Metadata in main thread to page: \n" + str(cls.mlist))
-    return cls.mlist[0], cls.mlist[1], cls.mlist[2], cls.mlist[3], cls.mlist[4], cls.mlist[5], cls.mlist[6],
+    return cls.mlist[0], cls.mlist[1], cls.mlist[3], cls.mlist[4], cls.mlist[5], cls.mlist[6],
   
   @classmethod
   def seetemp(cls): # Graphs the temperature.
@@ -139,12 +137,6 @@ class Website:
     else: # If 1200 temperatures do not exist, graphs what is there.
       x = 0
     plt.figure(figsize=(6.4,3.5))
-    if cls.mlist[2]["A_status"] != "error": # Does not plot if there is an error.
-      atm = cls.tdata[0][cls.tdata[0][x:, 0].argsort()]
-      plt.scatter(atm[0][1:], atm[1][1:], color = "red",label = "A_Temp_Mon")
-    if cls.mlist[2]["B_status"] != "error":
-      btm = cls.tdata[1][cls.tdata[1][x:, 0].argsort()]
-      plt.scatter(btm[0][1:], btm[1][1:], color = "orange",label = "B_Temp_Mon")
     if cls.mlist[3]["A_status"] != "error":
       atc = cls.tdata[2][cls.tdata[2][x:, 0].argsort()]
       plt.scatter(atc[0][1:], atc[1][1:], color = "green",label = "A_Temp_Ctrl")
@@ -251,20 +243,22 @@ class Website:
     return flags
     
   @classmethod
-  def tempflag(cls, pval=[0, 0, 0, 0], seconds=10):
-    # pvals = [amon, bmon, actrl, bctrl]
-    probs = [[False, False], [False, False], [False, False], [False, False]]
-    labs = [[2,"A_status"], [2,"B_status"], [3,"A_status"], [3,"B_status"]]
+  def tempflag(cls, seconds=10):
+    # pvals = [actrl, bctrl]
+    probs = [[False, False, False,], [False, False,False,]]
+    labs = [[3,"A_status", "A_T_target"], [3,"B_status", "B_T_target"]]
     for i in range(4):
       if cls.mlist[labs[i][0]][labs[i][1]] != "error":
-        if cls.tdata[i][1][-1] > pval[i]:
+        if cls.tdata[i][1][-1] > cls.mlist[labs[i][0]][labs[i][2]] + 5:
           probs[i][0] = True
+        if cls.tdata[i][1][-1] > cls.mlist[labs[i][0]][labs[i][2]] - 5:
+          probs[i][2] = True
         if not probs[i][0]:
           if len(cls.tdata) > 300: 
             x = len(cls.tdata) - 300
           else: 
             x = 0
-          if np.mean(cls.tdata[i][1][x:-1]) > pvals[i]:
+          if np.mean(cls.tdata[i][1][x:-1]) > pvals[i] + 5:
             probs[i][1] = True
     return probs
   
@@ -276,20 +270,19 @@ class Website:
       normal = activeflag(data,cal)
       mia = meta["imu_antenna"]
       mip = meta["imu_panda"]
-      tem = meta["temp_mon"]
       tec = meta["tempctrl"]
       lid = meta["lidar"]
       mot = meta["motor"]
       rfs = meta["rfswitch"]
     if active:
       try:       
-        mia, mip, tem, tec, lid, mot, rfs = cls.grabbe()
+        mia, mip, tec, lid, mot, rfs = cls.grabbe()
       except KeyError:
         print("No metadata being collected; this is going to cause problems!")
         mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
       normal = activeflag(cls.data, cls.cal)
     else:
-      tdata = np.append(tdata, [[[tem["A_timestamp"]], [tem["A_temp"]]], [[tem["B_timestamp"]], [tem["B_temp"]]],
+      tdata = np.append(tdata, [
                               [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
     tgraph = """
       <img src="data:image/png;base64,""" + cls.seetemp() + """" width="90%">
@@ -297,9 +290,9 @@ class Website:
     terror = """"""
     s = 10
     probs = cls.tempflag(seconds=s)
-    labs = ["A-monitoring", "B-monitoring", "A-control", "B-control"]
+    labs = ["A-control", "B-control"]
     if True:
-      for i in range(4):
+      for i in range(len(probs)):
         if probs[i][0]:
           terror += """
         <h2 style="color: red;">WARNING: """ + str(labs[i]) + """ is actively overheating!!!</h2>
@@ -308,11 +301,11 @@ class Website:
           terror += """
         <p style="color: yellow;">Notice: """ + str(labs[i]) + """ approached high temperatures in the last """ + str(s) + """ seconds.</p>
            """
-      for boo in ["A_status", "B_status"]:
-        if tem[boo] == "error":
+        elif probs[i][2]:
           terror += """
-        <p>Error in monitoring """ + boo + """</p>
+        <p style="color: yellow;">Notice: """ + str(labs[i]) + """ is five degrees below target.</p>
            """
+      for boo in ["A_status", "B_status"]:
         if tec[boo] == "error":
           terror += """
         <p>Error in control """ + boo + """</p>
