@@ -253,7 +253,7 @@ class Website:
     # pvals = [actrl, bctrl]
     probs = [[False, False, False,], [False, False,False,]]
     labs = [[3,"A_status", "A_T_target"], [3,"B_status", "B_T_target"]]
-    for i in range(4):
+    for i in range(2):
       if cls.mlist[labs[i][0]][labs[i][1]] != "error":
         if cls.tdata[i][1][-1] > cls.mlist[labs[i][0]][labs[i][2]] + 5:
           probs[i][0] = True
