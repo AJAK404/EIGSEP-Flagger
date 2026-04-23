@@ -29,7 +29,7 @@ class Website:
   cal = {"VNAO": [0], "VNAS": [0], "VNAL": [0]} # Contains the S11 calibration data; this empty placeholder avoids keyerrors.
   opene = False # Denotes whether the website has been opened or not.
   mlist = [[0], [0], ["xxx"], 
-           {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0, "A_T_target": 0, B_T_target": 0}, {"distance_m": 0}, 
+           {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0, "A_T_target": 0, "B_T_target": 0}, {"distance_m": 0}, 
            {"az_pos": 0, "el_pos": 0}, {"sw_state":0}] # Contains metadata; this empty placeholder avoids keyerrors. 
   ks = ["0", "02", "04", "1", "13", "15", "2", "24", "3", "35", "4", "5"] # A list of all possible spectra.
   spec={"0": np.array([[0]]), "02": np.array([[0]]), "04": np.array([[0]]), "1": np.array([[0]]), "13": np.array([[0]]), "15": np.array([[0]]), 
