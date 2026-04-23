@@ -299,9 +299,14 @@ class Website:
     else:
       tdata = np.append(tdata, [
                               [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
-    tgraph = """
+    if cls.metw:
+      tgraph = """
       <img src="data:image/png;base64,""" + cls.seetemp() + """" width="90%">
-      """
+        """
+    else:
+      tgraph = """
+      <p>No temperature yet!</p>
+        """
     terror = """"""
     s = 10
     probs = cls.tempflag(seconds=s)
