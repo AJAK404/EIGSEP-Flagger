@@ -18,8 +18,14 @@ import matplotlib.dates as mdates
 
 class Website: 
   flag = True # Tells functions running on a loop to stop when flag is false.
-  r2 = EigsepRedis(host="10.10.10.10") # For spectrum.
-  r = EigsepRedis(host="10.10.10.11") # For metadata and S11 data.
+  try:
+    r2 = EigsepRedis(host="10.10.10.10") # For spectrum.
+  except:
+    r2 = None
+  try:
+    r = EigsepRedis(host="10.10.10.11") # For metadata and S11 data.
+  except:
+    r = None
   #r= EigsepRedis(host="192.168.10.83")
   readspec = [] # Contains all spectrum data. 
   tdata = np.array([[[0],[0]], [[0],[0]]]) # Contains the points for, in this order,
