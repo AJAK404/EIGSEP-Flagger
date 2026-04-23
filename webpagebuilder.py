@@ -294,19 +294,36 @@ class Website:
         mia, mip, tec, lid, mot, rfs = cls.grabbe()
       except KeyError:
         print("No metadata being collected; this is going to cause problems!")
-        mia, mip, tem, tec, lid, mot, rfs = [0], [0], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_temp":0, "B_timestamp":0, "B_temp":0}, {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
+        mia, mip, tem, tec, lid, mot, rfs = [0], [0], ["xxx"], {"A_status": "error", "B_status": "error", "A_timestamp":0, "A_T_now":0, "B_timestamp":0, "B_T_now":0}, {"distance_m": 0}, {"az_pos": 0, "el_pos": 0}, {"sw_state":0}
       normal = activeflag(cls.data, cls.cal)
     else:
       tdata = np.append(tdata, [
                               [[tec["A_timestamp"]], [tec["A_T_now"]]], [[tec["B_timestamp"]], [tec["B_T_now"]]]], axis = 2)
-    if cls.metw:
+    if not (mia == [0] and mip == [0]):
       tgraph = """
       <img src="data:image/png;base64,""" + cls.seetemp() + """" width="90%">
         """
+      mtab = """
+      <div class="boxes" id="tool">
+      <h4 style="text-align: center">Motor</h4>
+      <div class="mon">
+        <li style="text-align:center"><b>AZ</b></li>
+        <li>Position: """ + str(mot["az_pos"]) + """</li>
+        <li style="text-align:center"><b>EL</b></li>
+        <li>Position: """ + str(mot["el_pos"]) + """</li>
+      </div>
+      <p>Lidar Distance: """ + str(lid["distance_m"]) + """ meters</p>
+      </div>
+      """
     else:
       tgraph = """
       <p>No temperature yet!</p>
         """
+      mtab = """
+      <div class="boxes" id="tool">
+      <p>No metadata yet!</p>
+      </div>
+      """
     terror = """"""
     s = 10
     probs = cls.tempflag(seconds=s)
@@ -330,6 +347,8 @@ class Website:
           terror += """
         <p>Error in control """ + boo + """</p>
             """
+    if not cls.metw:
+      terror = """"""
     if True:
       if len(normal) == 2:
         dlist = """Recording: """ + cls.good(normal["rec"]) + """</p>
@@ -368,10 +387,17 @@ class Website:
           swarning += k
       swarning += """</p>
       """
-      stab = """
+      if not (cls.spec["0"] == np.array([[0]]) and cls.spec["1"] == np.array([[0]])):
+        stab = """
     <div class="boxes" id="spec">
     <img id="g" class="gs" style.display="block" src="data:image/png;base64,""" + cls.seespec() + """" width="90%">
     """ + swarning + """
+    </div>
+    """
+      else:
+        stab = """
+    <div class="boxes" id="spec">
+    <p>No spectra yet!</p>
     </div>
     """
       specfunc = """
@@ -537,16 +563,7 @@ class Website:
       """ + tgraph + """
       """ + terror + """
     </div>
-    <div class="boxes" id="tool">
-      <h4 style="text-align: center">Motor</h4>
-      <div class="mon">
-        <li style="text-align:center"><b>AZ</b></li>
-        <li>Position: """ + str(mot["az_pos"]) + """</li>
-        <li style="text-align:center"><b>EL</b></li>
-        <li>Position: """ + str(mot["el_pos"]) + """</li>
-      </div>
-      <p>Lidar Distance: """ + str(lid["distance_m"]) + """ meters</p>
-    </div>
+    """ + mtab + """
     </div>
 </body>
 </html>"""
