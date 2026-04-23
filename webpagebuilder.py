@@ -388,15 +388,15 @@ class Website:
     collecting = """"""
     if not cls.spew:
       collecting += """
-        <p style="text-align: center;>Warning: Spectra are not being collected!</p>
+        <p style="text-align: center;">Warning: Spectra are not being collected!</p>
       """
     if not cls.s11w:
       collecting += """
-        <p style="text-align: center;>Warning: S11 data is not being collected!</p>
+        <p style="text-align: center;">Warning: S11 data is not being collected!</p>
       """
     if not cls.metw:
       collecting += """
-        <p style="text-align: center;>Warning: Metadata is not being collected!</p>
+        <p style="text-align: center;">Warning: Metadata is not being collected!</p>
       """
     html = """<!DOCTYPE html>
 <html lang="en">
