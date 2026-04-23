@@ -100,7 +100,7 @@ class Website:
 
   @classmethod
   def grabs11(cls): # Grabs S11 data on the S11 thread.
-    if r != None:
+    if cls.r != None:
       while cls.flag: # Stops when the program ends.
         try:
           d, c, h, m = cls.r.read_vna_data() # Gets data, cal, header, and metadata.
@@ -115,7 +115,7 @@ class Website:
   
   @classmethod
   def grabbit(cls): # Grabs metadata on the metadata thread.
-    if r != None:
+    if cls.r != None:
       while cls.flag:
         try:
           meta = cls.r.get_live_metadata()
@@ -192,7 +192,7 @@ class Website:
 
   @classmethod
   def seespectrum(cls, ks):
-    if r2 != None:
+    if cls.r2 != None:
       while cls.flag:
         try:
           cls.readspec = cls.r2.read_corr_data(timeout = 10)
